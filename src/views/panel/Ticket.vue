@@ -34,25 +34,6 @@
 							</div>
 						</div>
 					</li>
-					<!-- <li class="chat-message">
-						<div class="d-flex overflow-hidden" >
-							<div class="chat-message-wrapper flex-grow-1 w-50">
-								<div class="chat-message-text">
-									<p class="mb-0">
-										Yes that's correct documentation file, Design files are included with the template.
-									</p>
-								</div>
-								<div class="text-end text-muted mt-1">
-									<i class="ti ti-checks ti-xs me-1"></i>
-									<small>10:15 AM</small>
-								</div>
-							</div>
-							<div class="user-avatar flex-shrink-0 ms-3">
-								<div class="avatar avatar-sm">
-								</div>
-							</div>
-						</div>
-					</li> -->
 				</ul>
 			</div>
 			<!-- Chat message form -->

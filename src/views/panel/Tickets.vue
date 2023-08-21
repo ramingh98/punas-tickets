@@ -5,7 +5,7 @@
 				<div class="dt-buttons btn-group flex-wrap">
 					<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
 						data-bs-target="#basicModal">
-						Launch modal
+						ارسال تیکت
 					</button>
 				</div>
 			</div>
@@ -85,59 +85,100 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>
+					<h5 class="modal-title" id="exampleModalLabel1">ارسال تیکت</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col mb-3">
-							<label for="nameBasic" class="form-label">Name</label>
-							<input type="text" id="nameBasic" class="form-control" placeholder="Enter Name" />
+				<Form @submit="addTicket">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col mb-3">
+								<label for="nameBasic" class="form-label">عنوان</label>
+								<Field :validate-on-input="true" v-model="title" type="text" name="title"
+									:rules="validateTitle" class="form-control" />
+								<ErrorMessage name="title" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col mb-3">
+								<label for="nameBasic" class="form-label">متن پیام</label>
+								<Field :validate-on-input="true" v-model="message" as="textarea" type="text"
+									:rules="validateMessage" name="message" class="form-control" />
+								<ErrorMessage name="message" />
+							</div>
 						</div>
 					</div>
-					<div class="row g-2">
-						<div class="col mb-0">
-							<label for="emailBasic" class="form-label">Email</label>
-							<input type="email" id="emailBasic" class="form-control" placeholder="xxxx@xxx.xx" />
-						</div>
-						<div class="col mb-0">
-							<label for="dobBasic" class="form-label">DOB</label>
-							<input type="date" id="dobBasic" class="form-control" />
-						</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+							بستن
+						</button>
+						<button type="submit" class="btn btn-primary">ارسال</button>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-						Close
-					</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
+				</Form>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 import axios from "@/utils/axios";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import { useToast } from "vue-toast-notification";
+const toast = useToast();
 export default {
 	data() {
 		return {
 			users: [],
+			title: '',
+			message: ''
 		}
+	},
+	components: {
+		Form, Field, ErrorMessage
 	},
 	methods: {
 		getTickets: function () {
 			var $this = this;
 			axios.weblUrl.get('/v1/Tickets/Tickets/Read').then(function (result) {
-				console.log(result.data);
 				if (result.data.IsSuccess) {
 					$this.users = result.data.Value
+				} else {
+					toast.error('خطای سرور')
 				}
-				console.log($this.users);
 			})
+		},
+		addTicket: function () {
+			var $this = this;
+			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
+				"Title": $this.title,
+				"TicketId": null,
+				"Message": $this.message,
+				"FlutterDelta": "-----",
+				"SupporterId": null,
+				"Rate": null,
+			}).then(function (result) {
+				if (result.data.IsSuccess) {
+					$('#basicModal').modal('hide');
+					$this.title = '';
+					$this.message = '';
+				}
+			}).catch(function (result) {
+				toast.error("خطای سرور")
+			})
+		},
+		validateTitle: function (title) {
+			if (title == null || title == "" || title.trim() == false) {
+				return 'عنوان الزامیست';
+			}
+			return true;
+		},
+		validateMessage: function (message) {
+			if (message == null || message == "" || message.trim() == false) {
+				return 'متن پیام الزامیست';
+			}
+			return true;
 		}
 	},
 	alert: function () {
