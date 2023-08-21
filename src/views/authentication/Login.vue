@@ -116,7 +116,7 @@ export default {
 				if (result.data.IsSuccess) {
 					console.log(result.data);
 					localStorage.setItem("token", result.data.Value.Token);
-					toast.success("عملیات با موفقیت انجام شد");
+					toast.success("ورود موفقیت آمیز به سیستم");
 					$this.$router.push("/")
 				}
 				else {
@@ -124,7 +124,7 @@ export default {
 				}
 			}).catch(function (result) {
 				console.log(result);
-				toast.error(result.Message);
+				toast.error(result.data.Message);
 			})
 		},
 		phoneNumberValidation: function (phoneNumber) {

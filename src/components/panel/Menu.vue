@@ -33,38 +33,14 @@
             <li class="menu-item">
                 <router-link to="/UserPanel/Authentication" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-lock"></i>
-                    <div data-i18n="Page 1">احراز هویت</div>
-                </router-link>
-            </li>
-            <li class="menu-item">
-                <router-link to="/UserPanel/Wallet" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-wallet"></i>
-                    <div data-i18n="Page 1">کیف پول</div>
-                </router-link>
-            </li>
-            <li class="menu-item">
-                <router-link to="/UserPanel/BankCards" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-currency-dollar"></i>
-                    <div data-i18n="Page 1">کارت های بانکی</div>
-                </router-link>
-            </li>
-            <li class="menu-item">
-                <router-link to="/UserPanel/BuyAndSell" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-building-store"></i>
-                    <div data-i18n="Page 1">خرید و فروش</div>
-                </router-link>
-            </li>
-            <li class="menu-item">
-                <router-link to="/UserPanel/Profile" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-user-circle"></i>
-                    <div data-i18n="Page 1">حساب کاربری</div>
+                    <div data-i18n="Page 1">تیکت ها</div>
                 </router-link>
             </li>
         </ul>
     </aside>
 </template>
 
-<script setup>
+<script>
 </script>
 
 <style></style>
