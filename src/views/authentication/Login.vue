@@ -89,7 +89,7 @@ export default {
 		submit: function () {
 			var $this = this;
 			$("#icon").show();
-			axios.post("/v1/Identities/ConfirmationCodes/AddForLogin", {
+			axios.weblUrl.post("/v1/Identities/ConfirmationCodes/AddForLogin", {
 				UserName: this.phoneNumber
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
@@ -124,7 +124,6 @@ export default {
 				}
 			}).catch(function (result) {
 				console.log(result);
-				toast.error(result.data.Message);
 			})
 		},
 		phoneNumberValidation: function (phoneNumber) {
