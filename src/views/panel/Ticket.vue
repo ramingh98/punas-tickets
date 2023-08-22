@@ -37,44 +37,85 @@
 				</ul>
 			</div>
 			<!-- Chat message form -->
-			<div class="chat-history-footer shadow-sm">
-				<form class="form-send-message d-flex justify-content-between align-items-center">
-					<input class="form-control message-input border-0 me-3 shadow-none"
-						placeholder="Type your message here" />
-					<div class="message-actions d-flex align-items-center">
-						<label for="attach-doc" class="form-label mb-0">
-							<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-							<input type="file" id="attach-doc" hidden />
-						</label>
-						<button class="btn btn-primary d-flex send-msg-btn">
-							<i class="ti ti-send me-md-1 me-0"></i>
-							<span class="align-middle d-md-inline-block d-none">Send</span>
-						</button>
+			<Form @submit="sendMessage">
+				<div class="chat-history-footer shadow-sm">
+					<div class="form-send-message d-flex justify-content-between align-items-center">
+						<Field :rules="validateMessage" name="message" :validate-on-input="true"
+							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
+							placeholder="متن پیام را وارد نمایید ..." />
+						<div class="message-actions d-flex align-items-center">
+							<label for="attach-doc" class="form-label mb-0">
+								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
+								<input type="file" id="attach-doc" hidden />
+							</label>
+							<button class="btn btn-primary d-flex send-msg-btn">
+								<i class="ti ti-send me-md-1 me-0"></i>
+								<span class="align-middle d-md-inline-block d-none">Send</span>
+							</button>
+						</div>
 					</div>
-				</form>
-			</div>
+				</div>
+				<ErrorMessage name="message" />
+			</Form>
 		</div>
 	</div>
 </template>
 <script>
 import axios from '@/utils/axios';
+import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useToast } from 'vue-toast-notification';
+
 const toast = useToast();
+
 export default {
 	data() {
 		return {
 			id: '',
-			ticket: {}
+			ticket: {},
+			message: ''
 		}
 	},
+	components: {
+		Form, Field, ErrorMessage
+	},
 	mounted() {
-		this.id = this.$route.params.id;
-		var $this = this;
-		axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
-			$this.ticket = result.data.Value;
-		}).catch(function () {
-			toast.error("خطای سرور")
-		})
+		this.getMessages();
+	},
+	methods: {
+		getMessages: function () {
+			this.id = this.$route.params.id;
+			var $this = this;
+			axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
+				$this.ticket = result.data.Value;
+			}).catch(function () {
+				toast.error("خطای سرور")
+			})
+		},
+		sendMessage: function () {
+			var $this = this;
+			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
+				"Title": $this.message,
+				"TicketId": $this.id,
+				"Message": $this.message,
+				"FlutterDelta": "-----",
+				"SupporterId": null,
+				"Rate": null,
+				"TicketAttachments": null
+			}).then(function (result) {
+				console.log(result);
+				toast.success("پیام ارسال شد");
+				$this.message = '';
+				$this.getMessages();
+			}).catch(function () {
+				toast.error('خطای سرور پیش آمده');
+			})
+		},
+		validateMessage: function (message) {
+			if (message == null || message == "" || message.trim() == false) {
+				return 'متن پیام الزامیست';
+			}
+			return true;
+		}
 	},
 }
 </script>

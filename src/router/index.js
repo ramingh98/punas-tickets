@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import Login from '../views/authentication/Login';
 //import Register from '../views/authentication/Register';
-import Panel from '../layouts/Panel.vue';
+import UserPanel from '../layouts/UserPanel.vue';
 
 const routes = [
 	{
@@ -19,7 +19,7 @@ const routes = [
 	// 	component: Register
 	// },
 	{
-		path: '/Panel', component: Panel, children: [
+		path: '/UserPanel', component: UserPanel, children: [
 			{ path: 'Tickets', component: () => import('../views/panel/Tickets') },
 			{ path: 'Ticket/:id', name: 'Ticket', component: () => import('../views/panel/Ticket') }
 		]

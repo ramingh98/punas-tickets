@@ -44,7 +44,7 @@
 								<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
 							</td>
 							<td>
-								<RouterLink :to="`/Panel/Ticket/${item.TicketId}`">
+								<RouterLink :to="`/UserPanel/Ticket/${item.TicketId}`">
 									<button type="button" class="btn rounded-pill btn-dark waves-effect waves-light">
 										گفتگو ها
 									</button>
@@ -144,7 +144,8 @@ export default {
 			axios.weblUrl.get('/v1/Tickets/Tickets/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.users = result.data.Value
-				} else {
+				}
+				else {
 					toast.error('خطای سرور')
 				}
 			})
@@ -163,9 +164,11 @@ export default {
 					$('#basicModal').modal('hide');
 					$this.title = '';
 					$this.message = '';
+					$this.getTickets();
+					toast.success('تیکت ارسال شد');
 				}
-			}).catch(function (result) {
-				toast.error("خطای سرور")
+			}).catch(function () {
+				toast.error("خطای سرور");
 			})
 		},
 		validateTitle: function (title) {
