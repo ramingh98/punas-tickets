@@ -11,29 +11,10 @@
 									<i class="ti ti-menu-2 ti-sm cursor-pointer d-lg-none d-block me-2"
 										data-bs-toggle="sidebar" data-overlay data-target="#app-chat-contacts"></i>
 									<div class="flex-shrink-0 avatar">
-									
+
 									</div>
 									<div class="chat-contact-info flex-grow-1 ms-2">
-										<h6 class="m-0">Felecia Rower</h6>
-										<small class="user-status text-muted">NextJS developer</small>
-									</div>
-								</div>
-								<div class="d-flex align-items-center">
-									<i class="ti ti-phone-call cursor-pointer d-sm-block d-none me-3"></i>
-									<i class="ti ti-video cursor-pointer d-sm-block d-none me-3"></i>
-									<i class="ti ti-search cursor-pointer d-sm-block d-none me-3"></i>
-									<div class="dropdown d-flex align-self-center">
-										<button class="btn p-0" type="button" id="chat-header-actions"
-											data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<i class="ti ti-dots-vertical"></i>
-										</button>
-										<div class="dropdown-menu dropdown-menu-end" aria-labelledby="chat-header-actions">
-											<a class="dropdown-item" href="javascript:void(0);">View Contact</a>
-											<a class="dropdown-item" href="javascript:void(0);">Mute Notifications</a>
-											<a class="dropdown-item" href="javascript:void(0);">Block Contact</a>
-											<a class="dropdown-item" href="javascript:void(0);">Clear Chat</a>
-											<a class="dropdown-item" href="javascript:void(0);">Report</a>
-										</div>
+										<h3 class="m-0">{{ title }}</h3>
 									</div>
 								</div>
 							</div>
@@ -157,31 +138,10 @@
 					</div>
 				</div>
 				<!-- /Sidebar Right -->
-
 				<div class="app-overlay"></div>
 			</div>
 		</div>
 	</div>
-	<!-- <form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
-				<div class="chat-history-footer  shadow-sm">
-					<div class="form-send-message d-flex justify-content-between align-items-center">
-						<Field :rules="validateMessage" name="message" :validate-on-input="true"
-							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-							placeholder="متن پیام را وارد نمایید ..." />
-						<div class="message-actions d-flex align-items-center">
-							<label for="attach-doc" class="form-label mb-0">
-								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-								<input type="file" id="attach-doc" hidden />
-							</label>
-							<button class="btn btn-primary d-flex send-msg-btn">
-								<i class="ti ti-send me-md-1 me-0"></i>
-								<span class="align-middle d-md-inline-block d-none">Send</span>
-							</button>
-						</div>
-					</div>
-				</div>
-				<ErrorMessage name="message" />
-			</form> -->
 </template>
 <script>
 import axios from '@/utils/axios';
@@ -195,7 +155,8 @@ export default {
 		return {
 			id: '',
 			ticket: {},
-			message: ''
+			message: '',
+			title: ''
 		}
 	},
 	components: {
@@ -209,8 +170,8 @@ export default {
 			this.id = this.$route.params.id;
 			var $this = this;
 			axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
-				console.log(result);
 				$this.ticket = result.data.Value.CustomerTickets;
+				$this.title = result.data.Value.Title
 			}).catch(function () {
 				toast.error("خطای سرور")
 			})
@@ -230,8 +191,8 @@ export default {
 				toast.success("پیام ارسال شد");
 				$this.message = '';
 				$this.getMessages();
-			}).catch(function () {
-				toast.error('خطای سرور پیش آمده');
+			}).catch(function (result) {
+				toast.warning(result.response.data.Message);
 			})
 		},
 		validateMessage: function (message) {
