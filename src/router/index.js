@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import Login from '../views/authentication/Login';
+import AdminLogin from '../views/authentication/AdminLogin';
 //import Register from '../views/authentication/Register';
 import UserPanel from '../layouts/UserPanel.vue';
+import AdminPanel from '../layouts/AdminPanel.vue';
 
 const routes = [
 	{
@@ -14,14 +16,24 @@ const routes = [
 		path: '/Authentication/Login',
 		component: Login
 	},
+	{
+		path: '/Authentication/AdminLogin',
+		component: AdminLogin
+	},
 	// {
 	// 	path: '/Authentication/Register',
 	// 	component: Register
 	// },
 	{
 		path: '/UserPanel', component: UserPanel, children: [
-			{ path: 'Tickets', component: () => import('../views/panel/Tickets') },
-			{ path: 'Ticket/:id', name: 'Ticket', component: () => import('../views/panel/Ticket') }
+			{ path: 'Tickets', component: () => import('../views/userPanel/Tickets') },
+			{ path: 'Ticket/:id', component: () => import('../views/userPanel/Ticket') }
+		]
+	},
+	{
+		path: '/AdminPanel', component: AdminPanel, children: [
+			{ path: 'Tickets', component: () => import('../views/adminPanel/Tickets') },
+			{ path: 'Ticket/:id', name: 'Ticket', component: () => import('../views/adminPanel/Ticket') }
 		]
 	}
 ]

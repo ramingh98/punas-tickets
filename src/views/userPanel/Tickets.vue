@@ -16,8 +16,6 @@
 					aria-describedby="DataTables_Table_1_info" style="width: 1046px;">
 					<thead>
 						<tr>
-							<th class="control sorting_disabled" rowspan="1" colspan="1" aria-label="">
-							</th>
 							<th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1"
 								aria-label="Name: activate to sort column ascending">عنوان
 							</th>
@@ -31,8 +29,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="item in users" :key="item.id">
-							<td class="control" tabindex="0" style=""></td>
+						<tr v-for="item in tickets" :key="item.id">
 							<td v-text="item.Title">
 							</td>
 							<td v-text="item.RegDateTime"></td>
@@ -53,35 +50,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="row">
-					<div class="col-sm-12 col-md-6">
-						<div class="dataTables_info" id="DataTables_Table_1_info" role="status" aria-live="polite">Showing 1
-							to 7 of 100 entries
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-6">
-						<div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_1_paginate">
-							<ul class="pagination">
-								<li class="paginate_button page-item previous disabled" id="DataTables_Table_1_previous"><a
-										href="#" aria-controls="DataTables_Table_1" data-dt-idx="previous" tabindex="0"
-										class="page-link">
-										Previous
-									</a>
-								</li>
-								<li class="paginate_button page-item active">
-									<a href="#" aria-controls="DataTables_Table_1" data-dt-idx="0" tabindex="0"
-										class="page-link">1</a>
-								</li>
-								<li class="paginate_button page-item next" id="DataTables_Table_1_next"><a href="#"
-										aria-controls="DataTables_Table_1" data-dt-idx="next" tabindex="0"
-										class="page-link">
-										Next()
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -130,7 +98,7 @@ const toast = useToast();
 export default {
 	data() {
 		return {
-			users: [],
+			tickets: [],
 			title: '',
 			message: ''
 		}
@@ -143,7 +111,7 @@ export default {
 			var $this = this;
 			axios.weblUrl.get('/v1/Tickets/Tickets/Read').then(function (result) {
 				if (result.data.IsSuccess) {
-					$this.users = result.data.Value
+					$this.tickets = result.data.Value
 				}
 				else {
 					toast.error('خطای سرور')

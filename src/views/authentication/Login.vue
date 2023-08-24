@@ -107,7 +107,7 @@ export default {
 		},
 		confirm: function () {
 			var $this = this;
-			axios.post('/v1/Identities/ConfirmationCodes/Login', {
+			axios.weblUrl.post('/v1/Identities/ConfirmationCodes/Login', {
 				HashId: localStorage.getItem("HashId"),
 				UserName: $this.phoneNumber,
 				ConfirmCode: $this.confirmCode

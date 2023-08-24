@@ -45,9 +45,9 @@
 </template>
 
 <script setup>
-import Header from '../components/userPanel/Haeder.vue';
-import Footer from '../components/userPanel/Footer.vue';
-import Menu from '../components/userPanel/Menu.vue';
+import Header from '../components/adminPanel/Haeder.vue';
+import Footer from '../components/adminPanel/Footer.vue';
+import Menu from '../components/adminPanel/Menu.vue';
 </script>
 
 <style></style>
