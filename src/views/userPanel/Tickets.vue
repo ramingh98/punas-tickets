@@ -120,13 +120,14 @@ export default {
 		},
 		addTicket: function () {
 			var $this = this;
-			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
+			axios.weblUrl.post('/api/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
 				"Message": $this.message,
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
+				
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
 					$('#basicModal').modal('hide');

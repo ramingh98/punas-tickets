@@ -89,7 +89,7 @@ export default {
 		submit: function () {
 			var $this = this;
 			$("#icon").show();
-			axios.weblUrl.post("/v1/Identities/ConfirmationCodes/AddForLogin", {
+			axios.weblUrl.post("/Identities/ConfirmationCodes/AddForLogin", {
 				UserName: this.phoneNumber
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
@@ -107,7 +107,7 @@ export default {
 		},
 		confirm: function () {
 			var $this = this;
-			axios.weblUrl.post('/v1/Identities/ConfirmationCodes/Login', {
+			axios.weblUrl.post('/Identities/ConfirmationCodes/Login', {
 				HashId: localStorage.getItem("HashId"),
 				UserName: $this.phoneNumber,
 				ConfirmCode: $this.confirmCode

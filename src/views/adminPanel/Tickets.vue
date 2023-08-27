@@ -72,7 +72,7 @@ export default {
 		getTickets: function () {
 			var $this = this;
 			
-			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
+			axios.panelUrl.get('/Tickets/Ticket/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value
 					console.log(result.data);
@@ -94,7 +94,7 @@ export default {
 				className: 'align'
 			}).then(() => {
 				$this.showLoader = true;
-				axios.panelUrl.post(`/v1/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
+				axios.panelUrl.post(`/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
 					console.log(result);
 					$this.getTickets();
 					$this.showLoader = false;

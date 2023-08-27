@@ -3,7 +3,7 @@
 		<div class="app-chat card overflow-hidden">
 			<div class="row g-0">
 				<!-- Chat History -->
-				<div class="col app-chat-history bg-body">
+				<!-- <div class="col app-chat-history bg-body">
 					<div class="chat-history-wrapper">
 						<div class="chat-history-header border-bottom">
 							<div class="d-flex justify-content-between align-items-center">
@@ -49,7 +49,6 @@
 								</div>
 							</ul>
 						</div>
-						<!-- Chat message form -->
 						<div class="chat-history-footer shadow-sm">
 							<Form @submit="sendMessage"
 								class="form-send-message d-flex justify-content-between align-items-center">
@@ -60,7 +59,7 @@
 									<i class="speech-to-text ti ti-microphone ti-sm cursor-pointer"></i>
 									<label for="attach-doc" class="form-label mb-0">
 										<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-										<input type="file" id="attach-doc" hidden />
+										<input ref="fileInput" type="file" id="attach-doc" hidden />
 									</label>
 									<button class="btn btn-primary d-flex send-msg-btn">
 										<i class="ti ti-send me-md-1 me-0"></i>
@@ -70,74 +69,41 @@
 							</Form>
 						</div>
 					</div>
-				</div>
-				<!-- /Chat History -->
-
-				<!-- Sidebar Right -->
-				<div class="col app-chat-sidebar-right app-sidebar overflow-hidden" id="app-chat-sidebar-right">
-					<div
-						class="sidebar-header d-flex flex-column justify-content-center align-items-center flex-wrap px-4 pt-5">
-						<div class="avatar avatar-xl avatar-online">
-						</div>
-						<h6 class="mt-2 mb-0">Felecia Rower</h6>
-						<span>NextJS Developer</span>
-						<i class="ti ti-x ti-sm cursor-pointer close-sidebar d-block" data-bs-toggle="sidebar" data-overlay
-							data-target="#app-chat-sidebar-right"></i>
-					</div>
-					<div class="sidebar-body px-4 pb-4">
-						<div class="my-4">
-							<p class="text-muted text-uppercase">About</p>
-							<p class="mb-0 mt-3">
-								A Next. js developer is a software developer who uses the Next. js framework alongside
-								ReactJS
-								to build web applications.
-							</p>
-						</div>
-						<div class="my-4">
-							<p class="text-muted text-uppercase">Personal Information</p>
-							<ul class="list-unstyled d-grid gap-2 mt-3">
-								<li class="d-flex align-items-center">
-									<i class="ti ti-mail"></i>
-									<span class="align-middle ms-2">josephGreen@email.com</span>
-								</li>
-								<li class="d-flex align-items-center">
-									<i class="ti ti-phone-call"></i>
-									<span class="align-middle ms-2">+1(123) 456 - 7890</span>
-								</li>
-								<li class="d-flex align-items-center">
-									<i class="ti ti-clock"></i>
-									<span class="align-middle ms-2">Mon - Fri 10AM - 8PM</span>
-								</li>
-							</ul>
-						</div>
-						<div class="mt-4">
-							<p class="text-muted text-uppercase">Options</p>
-							<ul class="list-unstyled d-grid gap-2 mt-3">
-								<li class="cursor-pointer d-flex align-items-center">
-									<i class="ti ti-badge"></i>
-									<span class="align-middle ms-2">Add Tag</span>
-								</li>
-								<li class="cursor-pointer d-flex align-items-center">
-									<i class="ti ti-star"></i>
-									<span class="align-middle ms-2">Important Contact</span>
-								</li>
-								<li class="cursor-pointer d-flex align-items-center">
-									<i class="ti ti-photo"></i>
-									<span class="align-middle ms-2">Shared Media</span>
-								</li>
-								<li class="cursor-pointer d-flex align-items-center">
-									<i class="ti ti-trash"></i>
-									<span class="align-middle ms-2">Delete Contact</span>
-								</li>
-								<li class="cursor-pointer d-flex align-items-center">
-									<i class="ti ti-ban"></i>
-									<span class="align-middle ms-2">Block Contact</span>
-								</li>
+				</div> -->
+				<div class="col app-chat-history bg-body">
+					<div class="chat-history-wrapper">
+						<div class="chat-history-body bg-body">
+							<ul class="list-unstyled chat-history">
+								<div v-for="item in ticket">
+									<li v-if="item.SupporterId != null" class="chat-message chat-message-right">
+										<div class="d-flex overflow-hidden">
+											<div class="chat-message-wrapper flex-grow-1 w-50">
+												<div class="chat-message-text">
+													<p class="mb-0" v-text="item.Message"></p>
+												</div>
+												<div class="text-end text-muted mt-1">
+													<small v-text="item.RegDateTime"></small>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li v-else class="chat-message">
+										<div class="d-flex overflow-hidden">
+											<div class="chat-message-wrapper flex-grow-1 w-50">
+												<div class="chat-message-text">
+													<p class="mb-0" v-text="item.Message"></p>
+												</div>
+												<div class="text-end text-muted mt-1">
+													<small v-text="item.RegDateTime"></small>
+												</div>
+											</div>
+										</div>
+									</li>
+								</div>
 							</ul>
 						</div>
 					</div>
 				</div>
-				<!-- /Sidebar Right -->
 				<div class="app-overlay"></div>
 			</div>
 		</div>
@@ -147,7 +113,6 @@
 import axios from '@/utils/axios';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useToast } from 'vue-toast-notification';
-
 const toast = useToast();
 
 export default {
@@ -156,7 +121,8 @@ export default {
 			id: '',
 			ticket: {},
 			message: '',
-			title: ''
+			title: '',
+			fileInput: null
 		}
 	},
 	components: {
@@ -176,8 +142,20 @@ export default {
 				toast.error("خطای سرور")
 			})
 		},
+
 		sendMessage: function () {
 			var $this = this;
+			const file = this.$refs.fileInput.files[0];
+
+			const reader = new FileReader();
+			reader.onload = () => {
+				this.fileInput = reader.result;
+			};
+			reader.readAsDataURL(file);
+
+
+			const filelist = [];
+			filelist.push();
 			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.message,
 				"TicketId": $this.id,
@@ -185,7 +163,7 @@ export default {
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
-				"TicketAttachments": null
+				"TicketAttachments": this.fileInput,
 			}).then(function (result) {
 				console.log(result);
 				toast.success("پیام ارسال شد");
@@ -194,6 +172,7 @@ export default {
 			}).catch(function (result) {
 				toast.warning(result.response.data.Message);
 			})
+
 		},
 		validateMessage: function (message) {
 			if (message == null || message == "" || message.trim() == false) {
