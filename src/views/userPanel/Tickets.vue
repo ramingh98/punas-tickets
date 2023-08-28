@@ -10,6 +10,7 @@
 				</div>
 			</div>
 		</div>
+		<loader v-if="loading" />
 		<div class="card-datatable table-responsive">
 			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
 				<table class="dt-fixedheader table dataTable dtr-column collapsed" id="DataTables_Table_1"
@@ -94,21 +95,26 @@
 import axios from "@/utils/axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from "vue-toast-notification";
+import loader from '@/components/Loader.vue'
+
 const toast = useToast();
+
 export default {
 	data() {
 		return {
 			tickets: [],
 			title: '',
-			message: ''
+			message: '',
+			loading: false
 		}
 	},
 	components: {
-		Form, Field, ErrorMessage
+		Form, Field, ErrorMessage, loader
 	},
 	methods: {
 		getTickets: function () {
 			var $this = this;
+			$this.loading = true;
 			axios.weblUrl.get('/v1/Tickets/Tickets/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value
@@ -116,10 +122,15 @@ export default {
 				else {
 					toast.error('خطای سرور')
 				}
+				$this.loading = false;
+			}).catch(function () {
+				$this.loading = false;
+				toast.error('خطای سرور')
 			})
 		},
 		addTicket: function () {
 			var $this = this;
+			$this.loading = true;
 			axios.weblUrl.post('/api/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
@@ -127,16 +138,17 @@ export default {
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
-				
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
 					$('#basicModal').modal('hide');
 					$this.title = '';
 					$this.message = '';
 					$this.getTickets();
+					$this.loading = false;
 					toast.success('تیکت ارسال شد');
 				}
 			}).catch(function () {
+				$this.loading = false;
 				toast.error("خطای سرور");
 			})
 		},

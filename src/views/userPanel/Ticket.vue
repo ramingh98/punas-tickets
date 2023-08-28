@@ -3,7 +3,7 @@
 		<div class="app-chat card overflow-hidden">
 			<div class="row g-0">
 				<!-- Chat History -->
-				<!-- <div class="col app-chat-history bg-body">
+				<div class="col app-chat-history bg-body">
 					<div class="chat-history-wrapper">
 						<div class="chat-history-header border-bottom">
 							<div class="d-flex justify-content-between align-items-center">
@@ -19,6 +19,7 @@
 								</div>
 							</div>
 						</div>
+						<loader v-if="loading" />
 						<div class="chat-history-body bg-body">
 							<ul class="list-unstyled chat-history">
 								<div v-for="item in ticket">
@@ -59,9 +60,10 @@
 									<i class="speech-to-text ti ti-microphone ti-sm cursor-pointer"></i>
 									<label for="attach-doc" class="form-label mb-0">
 										<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-										<input ref="fileInput" type="file" id="attach-doc" hidden />
+										<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
+											@change="handleFileChange" />
 									</label>
-									<button class="btn btn-primary d-flex send-msg-btn">
+									<button type="submit" class="btn btn-primary d-flex send-msg-btn">
 										<i class="ti ti-send me-md-1 me-0"></i>
 										<span class="align-middle d-md-inline-block d-none">Send</span>
 									</button>
@@ -69,43 +71,9 @@
 							</Form>
 						</div>
 					</div>
-				</div> -->
-				<div class="col app-chat-history bg-body">
-					<div class="chat-history-wrapper">
-						<div class="chat-history-body bg-body">
-							<ul class="list-unstyled chat-history">
-								<div v-for="item in ticket">
-									<li v-if="item.SupporterId != null" class="chat-message chat-message-right">
-										<div class="d-flex overflow-hidden">
-											<div class="chat-message-wrapper flex-grow-1 w-50">
-												<div class="chat-message-text">
-													<p class="mb-0" v-text="item.Message"></p>
-												</div>
-												<div class="text-end text-muted mt-1">
-													<small v-text="item.RegDateTime"></small>
-												</div>
-											</div>
-										</div>
-									</li>
-									<li v-else class="chat-message">
-										<div class="d-flex overflow-hidden">
-											<div class="chat-message-wrapper flex-grow-1 w-50">
-												<div class="chat-message-text">
-													<p class="mb-0" v-text="item.Message"></p>
-												</div>
-												<div class="text-end text-muted mt-1">
-													<small v-text="item.RegDateTime"></small>
-												</div>
-											</div>
-										</div>
-									</li>
-								</div>
-							</ul>
-						</div>
-					</div>
 				</div>
-				<div class="app-overlay"></div>
 			</div>
+			<div class="app-overlay"></div>
 		</div>
 	</div>
 </template>
@@ -113,6 +81,8 @@
 import axios from '@/utils/axios';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useToast } from 'vue-toast-notification';
+import loader from '@/components/Loader.vue'
+
 const toast = useToast();
 
 export default {
@@ -122,40 +92,48 @@ export default {
 			ticket: {},
 			message: '',
 			title: '',
-			fileInput: null
+			fileInput: [],
+			urls: [],
+			loading: false
 		}
 	},
 	components: {
-		Form, Field, ErrorMessage
+		Form, Field, ErrorMessage, loader
 	},
 	mounted() {
 		this.getMessages();
 	},
 	methods: {
+		handleFileChange(e) {
+			const self = this;
+			const fileInput = this.$refs.fileInput;
+			for (let i = 0; i < fileInput.files.length; i++) {
+				let reader = new FileReader();
+				const file = fileInput.files[i];
+				reader.onload = function (event) {
+					self.urls.push(event.target.result);
+				};
+				reader.readAsDataURL(file);
+			}
+			console.log(self.urls);
+		},
 		getMessages: function () {
 			this.id = this.$route.params.id;
 			var $this = this;
+			$this.loading = true;
 			axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
 				$this.ticket = result.data.Value.CustomerTickets;
 				$this.title = result.data.Value.Title
+				$this.loading = false;
+				console.log(result.data.Value.CustomerTickets[0].Attachments[0].FilePath);
 			}).catch(function () {
-				toast.error("خطای سرور")
+				toast.error("خطای سرور");
+				$this.loading = false;
 			})
 		},
-
 		sendMessage: function () {
 			var $this = this;
-			const file = this.$refs.fileInput.files[0];
-
-			const reader = new FileReader();
-			reader.onload = () => {
-				this.fileInput = reader.result;
-			};
-			reader.readAsDataURL(file);
-
-
-			const filelist = [];
-			filelist.push();
+			$this.loading = true;
 			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.message,
 				"TicketId": $this.id,
@@ -163,16 +141,17 @@ export default {
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
-				"TicketAttachments": this.fileInput,
+				"TicketAttachments": $this.urls,
 			}).then(function (result) {
 				console.log(result);
 				toast.success("پیام ارسال شد");
 				$this.message = '';
 				$this.getMessages();
+				$this.loading = false;
 			}).catch(function (result) {
 				toast.warning(result.response.data.Message);
+				$this.loading = false;
 			})
-
 		},
 		validateMessage: function (message) {
 			if (message == null || message == "" || message.trim() == false) {

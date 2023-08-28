@@ -19,7 +19,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<loader v-if="showLoader" />
+						<loader v-if="loading" />
 						<tr v-for="item in tickets" :key="item.id">
 							<td v-text="item.Title">
 							</td>
@@ -62,7 +62,7 @@ export default {
 	data() {
 		return {
 			tickets: [],
-			showLoader: false
+			loading: false
 		}
 	},
 	components: {
@@ -74,7 +74,7 @@ export default {
 			
 			axios.panelUrl.get('/Tickets/Ticket/Read').then(function (result) {
 				if (result.data.IsSuccess) {
-					$this.tickets = result.data.Value
+					$this.tickets = result.data.Value;
 					console.log(result.data);
 				}
 				else {
@@ -93,14 +93,14 @@ export default {
 				buttons: 'بله',
 				className: 'align'
 			}).then(() => {
-				$this.showLoader = true;
+				$this.loading = true;
 				axios.panelUrl.post(`/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
 					console.log(result);
 					$this.getTickets();
-					$this.showLoader = false;
+					$this.loading = false;
 					swal(result);
 				}).catch(function (result) {
-					$this.showLoader = false;
+					$this.loading = false;
 					swal(result);
 				})
 
