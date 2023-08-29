@@ -82,8 +82,9 @@ export default {
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
 					localStorage.setItem("token", result.data.Value.Token);
+					localStorage.setItem("role", "admin");
 					toast.success("ورود موفقیت آمیز به سیستم");
-					$this.$router.push("/AdminPanel/tickets")
+					window.location.href = "/AdminPanel/tickets";
 				}
 				else {
 					toast.error(result.data.Message);

@@ -89,7 +89,7 @@ export default {
 		submit: function () {
 			var $this = this;
 			$("#icon").show();
-			axios.weblUrl.post("/Identities/ConfirmationCodes/AddForLogin", {
+			axios.weblUrl.post("/api/Identities/ConfirmationCodes/AddForLogin", {
 				UserName: this.phoneNumber
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
@@ -107,7 +107,7 @@ export default {
 		},
 		confirm: function () {
 			var $this = this;
-			axios.weblUrl.post('/Identities/ConfirmationCodes/Login', {
+			axios.weblUrl.post('/api/Identities/ConfirmationCodes/Login', {
 				HashId: localStorage.getItem("HashId"),
 				UserName: $this.phoneNumber,
 				ConfirmCode: $this.confirmCode
@@ -116,8 +116,9 @@ export default {
 				if (result.data.IsSuccess) {
 					console.log(result.data);
 					localStorage.setItem("token", result.data.Value.Token);
+					localStorage.setItem("role", "user");
 					toast.success("ورود موفقیت آمیز به سیستم");
-					$this.$router.push("/")
+					window.location.href = "/userPanel/tickets";
 				}
 				else {
 					toast.error(result.Message);
