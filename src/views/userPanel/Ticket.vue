@@ -1,87 +1,97 @@
 <template>
-	<div class="container-xxl flex-grow-1 container-p-y">
-		<div class="app-chat card overflow-hidden">
-			<div class="row g-0">
-				<!-- Chat History -->
-				<div class="col app-chat-history bg-body">
-					<div class="chat-history-wrapper">
-						<div class="chat-history-header border-bottom">
-							<div class="d-flex justify-content-between align-items-center">
-								<div class="d-flex overflow-hidden align-items-center">
-									<i class="ti ti-menu-2 ti-sm cursor-pointer d-lg-none d-block me-2"
-										data-bs-toggle="sidebar" data-overlay data-target="#app-chat-contacts"></i>
-									<div class="flex-shrink-0 avatar">
-
-									</div>
-									<div class="chat-contact-info flex-grow-1 ms-2">
-										<h3 class="m-0">{{ title }}</h3>
-									</div>
-								</div>
+	<div class="row g-0">
+		<!-- Chat History -->
+		<div class="col app-chat-history bg-body">
+			<div class="chat-history-wrapper">
+				<div class="chat-history-header border-bottom">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex overflow-hidden align-items-center">
+							<div class="chat-contact-info flex-grow-1 ms-2">
+								<h2 class="m-0">{{ title }}</h2>
 							</div>
 						</div>
-						<loader v-if="loading" />
-						<div class="chat-history-body bg-body">
-							<ul class="list-unstyled chat-history">
-								<div v-for="item in ticket">
-									<li v-if="item.SupporterId != null" class="chat-message chat-message-right">
-										<div class="d-flex overflow-hidden">
-											<div class="chat-message-wrapper flex-grow-1 w-50">
-												<div class="chat-message-text">
-													<p class="mb-0" v-text="item.Message"></p>
-												</div>
-												<div class="text-end text-muted mt-1">
-													<small v-text="item.RegDateTime"></small>
-												</div>
-											</div>
-										</div>
-									</li>
-									<li v-else class="chat-message">
-										<div class="d-flex overflow-hidden">
-											<div class="chat-message-wrapper flex-grow-1 w-50">
-												<div class="chat-message-text">
-													<p class="mb-0" v-text="item.Message"></p>
-												</div>
-												<div class="text-end text-muted mt-1">
-													<small v-text="item.RegDateTime"></small>
-												</div>
-											</div>
-										</div>
-									</li>
-								</div>
-							</ul>
-						</div>
-						<div class="chat-history-footer shadow-sm">
-							<Form @submit="sendMessage"
-								class="form-send-message d-flex justify-content-between align-items-center">
-								<Field as="" :rules="validateMessage" name="message" :validate-on-input="true"
-									class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-									placeholder="متن پیام را وارد نمایید ..." />
-								<div class="message-actions d-flex align-items-center">
-									<i class="speech-to-text ti ti-microphone ti-sm cursor-pointer"></i>
-									<label for="attach-doc" class="form-label mb-0">
-										<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-										<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
-											@change="handleFileChange" />
-									</label>
-									<button type="submit" class="btn btn-primary d-flex send-msg-btn">
-										<i class="ti ti-send me-md-1 me-0"></i>
-										<span class="align-middle d-md-inline-block d-none">Send</span>
-									</button>
-								</div>
-							</Form>
+						<div class="d-flex align-items-center">
+							<h4>{{ status }}</h4>
 						</div>
 					</div>
 				</div>
+				<loader v-if="loading" />
+				<div class="chat-history-body bg-body">
+					<ul class="list-unstyled chat-history">
+						<div class="mt-4" v-for="(item, index) in ticket" :key="index">
+							<li v-if="item.SupporterId != null" class="chat-message chat-message-right"
+								style="text-align: left;">
+								<div class="d-flex overflow-hidden">
+									<div class="chat-message-wrapper flex-grow-1 w-50">
+										<div class="chat-message-text">
+											<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+											<hr />
+											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
+												<a target="blank" :href="attachedFile.FilePath">دانلود پیوست</a>
+											</div>
+										</div>
+										<div class="text-end text-muted mt-1">
+											<small v-text="item.RegDateTime"></small>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li v-else class="chat-message" style="text-align: right;">
+								<div class="d-flex overflow-hidden">
+									<div class="chat-message-wrapper flex-grow-1 w-50">
+										<div class="chat-message-text"
+											style="background-color: #7367f0 !important;width: fit-content; border-radius: 5px; padding: 9px;">
+											<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
+												
+												<a target="blank" :href="attachedFile.FilePath" style="color: white;">دانلود
+													پیوست</a>
+											</div>
+										</div>
+										<div class="text-muted mt-1">
+											<small v-text="item.RegDateTime"></small>
+										</div>
+									</div>
+								</div>
+							</li>
+						</div>
+					</ul>
+				</div>
+				<div class="chat-history-footer shadow-sm">
+					<Form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
+						<Field as="textarea" :rules="validateMessage" name="message" :validate-on-input="true"
+							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
+							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;" />
+						<div class="message-actions d-flex align-items-center">
+							<label for="attach-doc" class="form-label mb-0">
+								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
+								<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
+									@change="handleFileChange" />
+							</label>
+							<button id="BtnSend" class="btn btn-primary  send-msg-btn" style="margin-left: 15px;">
+								<i class="ti ti-send me-md-1 me-0"></i>
+								<span class="align-middle d-md-inline-block d-none">ارسال</span>
+							</button>
+							<br>
+							<button v-if="urls.length > 0" @click="deleteAttachments" class="btn btn-danger send-msg-btn">
+								<i class="ti ti-x me-md-1 me-0"></i>
+								<span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
+									ها</span>
+							</button>
+						</div>
+					</Form>
+				</div>
 			</div>
-			<div class="app-overlay"></div>
 		</div>
 	</div>
+	<div class="app-overlay"></div>
 </template>
 <script>
 import axios from '@/utils/axios';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useToast } from 'vue-toast-notification';
 import loader from '@/components/Loader.vue'
+import swal from 'sweetalert';
 
 const toast = useToast();
 
@@ -92,6 +102,7 @@ export default {
 			ticket: {},
 			message: '',
 			title: '',
+			status: '',
 			fileInput: [],
 			urls: [],
 			loading: false
@@ -104,6 +115,9 @@ export default {
 		this.getMessages();
 	},
 	methods: {
+		scrollTop() {
+			window.location.href = "#BtnSend";
+		},
 		handleFileChange(e) {
 			const self = this;
 			const fileInput = this.$refs.fileInput;
@@ -124,8 +138,9 @@ export default {
 			axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
 				$this.ticket = result.data.Value.CustomerTickets;
 				$this.title = result.data.Value.Title
+				$this.status = result.data.Value.Status
 				$this.loading = false;
-				console.log(result.data.Value.CustomerTickets[0].Attachments[0].FilePath);
+				$this.scrollTop();
 			}).catch(function () {
 				toast.error("خطای سرور");
 				$this.loading = false;
@@ -134,10 +149,11 @@ export default {
 		sendMessage: function () {
 			var $this = this;
 			$this.loading = true;
+			console.log(encodeURIComponent($this.message));
 			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.message,
 				"TicketId": $this.id,
-				"Message": $this.message,
+				"Message": this.message.replace(/\n/g, '<br/>'),
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
@@ -149,9 +165,32 @@ export default {
 				$this.getMessages();
 				$this.loading = false;
 			}).catch(function (result) {
+				console.log(result);
 				toast.warning(result.response.data.Message);
 				$this.loading = false;
 			})
+		},
+		deleteAttachments: function () {
+			var $this = this;
+			swal({
+				title: "توجه !",
+				text: "آیا از حذف تصاویر انتخاب شده مطمئن هستید؟",
+				icon: "warning",
+				dangerMode: true,
+				buttons: {
+					confirm: 'بله',
+					cancel: 'انصراف'
+				},
+				className: 'align'
+			}).then((isConfirmed) => {
+				if (isConfirmed) {
+					$this.urls = []
+					swal({
+						title: "عملیات موفق",
+						text: "تصاویر حذف شدند"
+					});
+				}
+			});
 		},
 		validateMessage: function (message) {
 			if (message == null || message == "" || message.trim() == false) {

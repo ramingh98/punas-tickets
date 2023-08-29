@@ -131,10 +131,10 @@ export default {
 		addTicket: function () {
 			var $this = this;
 			$this.loading = true;
-			axios.weblUrl.post('/api/Tickets/Tickets/AddTicketByUser', {
+			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
-				"Message": $this.message,
+				"Message": this.message.replace(/\n/g, '<br/>'),
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
@@ -147,9 +147,10 @@ export default {
 					$this.loading = false;
 					toast.success('تیکت ارسال شد');
 				}
-			}).catch(function () {
+			}).catch(function (result) {
 				$this.loading = false;
 				toast.error("خطای سرور");
+				console.log(result);
 			})
 		},
 		validateTitle: function (title) {

@@ -21,7 +21,7 @@
 					<tbody>
 						<loader v-if="loading" />
 						<tr v-for="item in tickets" :key="item.id">
-							<td v-text="item.Title">
+							<td v-text="item.TicketTitle">
 							</td>
 							<td v-text="item.RegDateTime"></td>
 							<td>
@@ -32,12 +32,12 @@
 								<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
 							</td>
 							<td :style="{ 'text-align-last': 'center' }">
-								<RouterLink :to="`/AdminPanel/Ticket/${item.Id}`">
+								<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">
 									<button type="button" class="btn rounded-pill btn-dark waves-effect waves-light">
 										گفتگو ها
 									</button>
 								</RouterLink>
-								<button v-if="item.Status != 'بسته شده'" @click="closeTicket(item.Id)"
+								<button v-if="item.Status != 'بسته شده'" @click="closeTicket(item.TicketId)"
 									:style="{ 'margin-right': '5px' }" type="button"
 									class="btn rounded-pill btn-danger waves-effect waves-light">
 									بستن
@@ -71,39 +71,55 @@ export default {
 	methods: {
 		getTickets: function () {
 			var $this = this;
-			
-			axios.panelUrl.get('/Tickets/Ticket/Read').then(function (result) {
+			$this.loading = true;
+			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
 					console.log(result.data);
+					$this.loading = false;
 				}
 				else {
 					toast.error('خطای سرور')
+					$this.loading = false;
 				}
+
+			}).catch(function (result) {
+				console.log(result);
+				$this.loading = false;
+				//toast.error(result)
 			})
 		},
 		closeTicket: function (id) {
 			var $this = this;
-			
 			swal({
 				title: "توجه !",
-				text: "آیا از بستین تیکت مطمئن هستید؟",
+				text: "آیا از بستن تیکت مطمئن هستید؟",
 				icon: "warning",
 				dangerMode: true,
-				buttons: 'بله',
+				buttons: {
+					confirm: 'بله',
+					cancel: 'انصراف'
+				},
 				className: 'align'
-			}).then(() => {
-				$this.loading = true;
-				axios.panelUrl.post(`/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
-					console.log(result);
-					$this.getTickets();
-					$this.loading = false;
-					swal(result);
-				}).catch(function (result) {
-					$this.loading = false;
-					swal(result);
-				})
-
+			}).then((isConfirmed) => {
+				if (isConfirmed) {
+					$this.loading = true;
+					axios.panelUrl.post(`/v1/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
+						console.log(result);
+						$this.getTickets();
+						$this.loading = false;
+						swal({
+							title: "عملیات موفق",
+							text: "تیکت بسته شد"
+						});
+					}).catch(function (result) {
+						$this.loading = false;
+						swal({
+							title: "عملیات ناموفق",
+							text: "مشکلی در عملیات پیش آمده"
+						});
+					});
+				}
 			});
 		}
 	},
