@@ -69,9 +69,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from 'vue-toast-notification';
 import axios from '../../utils/axios'
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const toast = useToast();
 
 export default {
