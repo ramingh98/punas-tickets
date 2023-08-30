@@ -6,8 +6,11 @@ import UserPanel from '../layouts/UserPanel.vue';
 import AdminPanel from '../layouts/AdminPanel.vue';
 
 const routes = [
-	{ path: '/', component: () => import('../views/userPanel/Tickets'), meta: { requiresAuth: true, isAdmin: false } },
 	{
+		path: '/', component: UserPanel, children: [
+			{ path: '', component: () => import('../views/userPanel/Tickets'), meta: { requiresAuth: true, isAdmin: false, role: 'user' } },
+		]
+	}, {
 		path: '/Authentication/Login',
 		component: Login
 	},
@@ -43,35 +46,35 @@ router.beforeEach((to, from, next) => {
 		if (localStorage.getItem("token") != null) {
 			if (to.matched.some(record => record.meta.role == 'admin')) {
 				if (localStorage.getItem('role') == 'admin') {
-					next()
-					return
+					next();
+					return;
 				}
 				else {
-					next('/Authentication/AdminLogin')
+					next('/Authentication/AdminLogin');
 				}
 			}
 			if (to.matched.some(record => record.meta.role == 'user')) {
 				if (localStorage.getItem('role') == 'user') {
-					next()
-					return
+					next();
+					return;
 				}
 				else {
-					next('/Authentication/Login')
+					next('/Authentication/Login');
 				}
 			}
-			next()
-			return
+			next();
+			return;
 		} else {
 			if (to.matched.some(record => record.meta.isAdmin)) {
-				next('/Authentication/AdminLogin')
+				next('/Authentication/AdminLogin');
 			} else {
-				next('/Authentication/Login')
+				next('/Authentication/Login');
 			}
 		}
-		next('/signin')
+		next('/signin');
 	} else {
-		next()
+		next();
 	}
 })
 
-export default router
+export default router;
