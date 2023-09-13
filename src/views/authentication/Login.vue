@@ -99,8 +99,8 @@ export default {
 					toast.error(result.data.Message);
 				}
 				console.log(result.data);
-			}).catch(function () {
-				toast.error('مشکلی در عملیات بوجود آمد');
+			}).catch(function (result) {
+				toast.error(result.response.data.Message);
 			})
 		},
 		confirm: function () {
