@@ -60,7 +60,6 @@ export default {
 	methods: {
 		logOut: function () {
 			localStorage.clear();
-
 		},
 		openSidbar() {
 			var element = document.getElementById('layout-menu');

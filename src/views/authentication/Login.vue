@@ -3,6 +3,7 @@
 		<div class="authentication-wrapper authentication-basic container-p-y">
 			<div class="authentication-inner py-4">
 				<!-- Login -->
+				<loader v-if="loading" />
 				<div class="card">
 					<div class="card-body">
 						<!-- Logo -->
@@ -69,6 +70,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from 'vue-toast-notification';
 import axios from '../../utils/axios'
+import loader from '@/components/Loader.vue'
 
 const toast = useToast();
 
@@ -77,15 +79,18 @@ export default {
 		return {
 			sendPhone: true,
 			phoneNumber: '',
-			confirmCode: ''
+			confirmCode: '',
+			loading: false
 		}
 	},
 	components: {
-		Form, Field, ErrorMessage
+		Form, Field, ErrorMessage, loader
 	},
 	methods: {
 		submit: function () {
+
 			var $this = this;
+			$this.loading = true;
 			$("#icon").show();
 			axios.weblUrl.post("/api/Identities/ConfirmationCodes/AddForLogin", {
 				UserName: this.phoneNumber
@@ -93,19 +98,21 @@ export default {
 				if (result.data.IsSuccess) {
 					localStorage.setItem("HashId", result.data.Value.HashId);
 					$this.sendPhone = false;
-					toast.success("کد تایید ارسال شد")
+					toast.success("کد تایید ارسال شد");
+					$this.loading = false;
 				}
 				else {
 					toast.error(result);
+					$this.loading = false;
 				}
-				console.log(result);
 			}).catch(function (result) {
 				toast.error(result.response.data.Message);
-				console.log(result);
+				$this.loading = false;
 			})
 		},
 		confirm: function () {
 			var $this = this;
+			$this.loading = true;
 			axios.weblUrl.post('/api/Identities/ConfirmationCodes/Login', {
 				HashId: localStorage.getItem("HashId"),
 				UserName: $this.phoneNumber,
@@ -118,12 +125,16 @@ export default {
 					localStorage.setItem("role", "user");
 					toast.success("ورود موفقیت آمیز به سیستم");
 					window.location.href = "/userPanel/tickets";
+					$this.loading = false;
 				}
 				else {
 					toast.error(result.Message);
+					$this.loading = false;
 				}
 			}).catch(function (result) {
 				console.log(result);
+				toast.error(result.response.data.Message);
+				$this.loading = false;
 			})
 		},
 		phoneNumberValidation: function (phoneNumber) {
