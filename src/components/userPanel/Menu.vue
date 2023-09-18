@@ -20,7 +20,7 @@
 			</a>
 			<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
 				<i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
-				<i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
+				<i @click="closeSideBar" class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
 			</a>
 		</div>
 
@@ -39,6 +39,14 @@
 </template>
 
 <script>
+export default {
+	methods: {
+		closeSideBar() {
+			var element = document.getElementById('layout-menu');
+			element.classList.remove("open-menu");
+		}
+	}
+}
 </script>
 
 <style></style>
