@@ -96,11 +96,12 @@ export default {
 					toast.success("کد تایید ارسال شد")
 				}
 				else {
-					toast.error(result.data.Message);
+					toast.error(result);
 				}
-				console.log(result.data);
+				console.log(result);
 			}).catch(function (result) {
 				toast.error(result.response.data.Message);
+				console.log(result);
 			})
 		},
 		confirm: function () {
@@ -126,7 +127,7 @@ export default {
 			})
 		},
 		phoneNumberValidation: function (phoneNumber) {
-			var pattern = new RegExp("^[0-9]{11}$");
+			var pattern = new RegExp(/^09\d{9}$/);
 			if (!pattern.test(phoneNumber)) {
 				return 'شماره موبایل معتبر وارد نمایید';
 			}

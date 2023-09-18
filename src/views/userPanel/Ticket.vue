@@ -73,7 +73,7 @@
 								<span class="align-middle d-md-inline-block d-none">ارسال</span>
 							</button>
 							<br>
-							<button v-if="urls.length > 0" @click="deleteAttachments" class="btn btn-danger send-msg-btn">
+							<button type="button" v-if="urls.length > 0" @click="deleteAttachments" class="btn btn-danger send-msg-btn">
 								<i class="ti ti-x me-md-1 me-0"></i>
 								<span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
 									ها</span>

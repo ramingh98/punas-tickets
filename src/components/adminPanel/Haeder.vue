@@ -32,7 +32,7 @@
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <span class="fw-semibold d-block">رامین قره‌داغی</span>
+										<span class="fw-semibold d-block">{{ userName }}</span>
                                     </div>
                                 </div>
                             </a>
@@ -41,16 +41,7 @@
                             <div class="dropdown-divider"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="ti ti-user-check me-2 ti-sm"></i>
-                                <span class="align-middle">حساب کاربری</span>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
+                            <a @click="logOut" class="dropdown-item" href="#">
                                 <i class="ti ti-logout me-2 ti-sm"></i>
                                 <span class="align-middle">خروج</span>
                             </a>
@@ -64,6 +55,23 @@
 </template>
 
 <script>
+export default {
+	methods: {
+		logOut: function () {
+			localStorage.clear();
+			
+		}
+	},
+	computed: {
+		userName() {
+			return this.$store.state.adminName;
+		},
+	},
+	created() {
+		// در اینجا می‌توانید از اکشنی که نام کاربر را از API دریافت می‌کند فراخوانی کنید
+		this.$store.dispatch('getAdminName');
+	},
+};
 </script>
 
 <style></style>

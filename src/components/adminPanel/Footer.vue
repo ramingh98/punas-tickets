@@ -5,7 +5,7 @@
                 <div>
                     ©
                     2023
-                    , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="fw-semibold">Pixinvent</a>
+                    , made with ❤️ by <a href="https://Punas.ir" target="_blank" class="fw-semibold">Punas</a>
                 </div>
             </div>
         </div>

@@ -105,7 +105,7 @@ export default {
 			tickets: [],
 			title: '',
 			message: '',
-			loading: false
+			loading: false,
 		}
 	},
 	components: {
@@ -123,9 +123,10 @@ export default {
 					toast.error('خطای سرور')
 				}
 				$this.loading = false;
-			}).catch(function () {
+			}).catch(function (result) {
 				$this.loading = false;
 				toast.error('خطای سرور')
+				console.log(result);
 			})
 		},
 		addTicket: function () {
@@ -164,10 +165,7 @@ export default {
 				return 'متن پیام الزامیست';
 			}
 			return true;
-		}
-	},
-	alert: function () {
-		alert("Ted")
+		},
 	},
 	mounted() {
 		this.getTickets();
