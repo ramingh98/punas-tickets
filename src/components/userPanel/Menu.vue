@@ -1,7 +1,7 @@
 <template>
 	<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 		<div class="app-brand demo">
-			<a href="/" class="app-brand-link">
+			<router-link to="/" class="app-brand-link">
 				<span class="app-brand-logo demo">
 					<svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd"
@@ -16,8 +16,8 @@
 							fill="#7367F0" />
 					</svg>
 				</span>
-				<span class="app-brand-text demo menu-text fw-bold">سیستم تیکتینگ پوناس</span>
-			</a>
+				<span class="app-brand-text demo menu-text fw-bold">پوناس تیکتینگ</span>
+			</router-link>
 			<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
 				<i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
 				<i @click="closeSideBar" class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
