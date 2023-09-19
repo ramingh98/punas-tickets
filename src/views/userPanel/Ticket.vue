@@ -24,7 +24,7 @@
 								<div class="d-flex overflow-hidden">
 									<div class="chat-message-wrapper flex-grow-1 w-50">
 										<div class="chat-message-text">
-											<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+											<p class="mb-0 chat-background" v-html="item.Message" style="color: white;"></p>
 											<hr />
 											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
 												<a target="blank" :href="attachedFile.FilePath">دانلود پیوست</a>
@@ -41,9 +41,9 @@
 									<div class="chat-message-wrapper flex-grow-1 w-50">
 										<div class="chat-message-text"
 											style="background-color: #7367f0 !important;width: fit-content; border-radius: 5px; padding: 9px;">
-											<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+											<p class="mb-0 " v-html="item.Message" style="color: white;"></p>
 											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
-												
+
 												<a target="blank" :href="attachedFile.FilePath" style="color: white;">دانلود
 													پیوست</a>
 											</div>
@@ -61,8 +61,9 @@
 					<Form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
 						<Field as="textarea" :rules="validateMessage" name="message" :validate-on-input="true"
 							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;" />
+							placeholder="متن پیام را وارد نمایید ..." style="height: 100px; width: 64%;" />
 						<div class="message-actions d-flex align-items-center">
+							<p style="font-size: 20px;">پسوند تصاویر JPG و PNG باشد</p>
 							<label for="attach-doc" class="form-label mb-0">
 								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
 								<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
@@ -73,7 +74,8 @@
 								<span class="align-middle d-md-inline-block d-none">ارسال</span>
 							</button>
 							<br>
-							<button type="button" v-if="urls.length > 0" @click="deleteAttachments" class="btn btn-danger send-msg-btn">
+							<button type="button" v-if="urls.length > 0" @click="deleteAttachments"
+								class="btn btn-danger send-msg-btn">
 								<i class="ti ti-x me-md-1 me-0"></i>
 								<span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
 									ها</span>
@@ -121,6 +123,7 @@ export default {
 		handleFileChange(e) {
 			const self = this;
 			const fileInput = this.$refs.fileInput;
+
 			for (let i = 0; i < fileInput.files.length; i++) {
 				let reader = new FileReader();
 				const file = fileInput.files[i];
@@ -129,7 +132,10 @@ export default {
 				};
 				reader.readAsDataURL(file);
 			}
-			console.log(self.urls);
+			setTimeout(() => {
+				toast.success(`${self.urls.length} عکس انتخاب شد`)
+				console.log(self.urls);
+			}, 1000);
 		},
 		getMessages: function () {
 			this.id = this.$route.params.id;
@@ -201,3 +207,12 @@ export default {
 	},
 }
 </script>
+<style scoped>
+.chat-background{
+	color: black !important;
+    display: inline-block;
+    background-color: rgb(191, 249, 255);
+    padding: 10px;
+    border-radius: 5px;
+}
+</style>

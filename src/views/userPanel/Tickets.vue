@@ -81,10 +81,22 @@
 						</div>
 					</div>
 					<div class="modal-footer">
+						<p style="font-size: 20px;">پسوند تصاویر JPG و PNG باشد</p>
+						<label for="attach-doc" class="form-label mb-0">
+							<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
+							<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
+								@change="handleFileChange" />
+						</label>
 						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
 							بستن
 						</button>
 						<button type="submit" class="btn btn-primary">ارسال</button>
+						<button type="button" v-if="urls.length > 0" @click="deleteAttachments"
+							class="btn btn-danger send-msg-btn">
+							<i class="ti ti-x me-md-1 me-0"></i>
+							<span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
+								ها</span>
+						</button>
 					</div>
 				</Form>
 			</div>
@@ -96,6 +108,7 @@ import axios from "@/utils/axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from "vue-toast-notification";
 import loader from '@/components/Loader.vue'
+import swal from 'sweetalert';
 
 const toast = useToast();
 
@@ -106,6 +119,8 @@ export default {
 			title: '',
 			message: '',
 			loading: false,
+			fileInput: [],
+			urls: [],
 		}
 	},
 	components: {
@@ -129,6 +144,22 @@ export default {
 				console.log(result);
 			})
 		},
+		handleFileChange(e) {
+			const self = this;
+			const fileInput = this.$refs.fileInput;
+			for (let i = 0; i < fileInput.files.length; i++) {
+				let reader = new FileReader();
+				const file = fileInput.files[i];
+				reader.onload = function (event) {
+					self.urls.push(event.target.result);
+				};
+				reader.readAsDataURL(file);
+			}
+			setTimeout(() => {
+				toast.success(`${self.urls.length} عکس انتخاب شد`)
+				console.log(self.urls);
+			}, 1000);
+		},
 		addTicket: function () {
 			var $this = this;
 			$this.loading = true;
@@ -139,6 +170,7 @@ export default {
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
+				"TicketAttachments": $this.urls,
 			}).then(function (result) {
 				if (result.data.IsSuccess) {
 					$('#basicModal').modal('hide');
@@ -165,6 +197,28 @@ export default {
 				return 'متن پیام الزامیست';
 			}
 			return true;
+		},
+		deleteAttachments: function () {
+			var $this = this;
+			swal({
+				title: "توجه !",
+				text: "آیا از حذف تصاویر انتخاب شده مطمئن هستید؟",
+				icon: "warning",
+				dangerMode: true,
+				buttons: {
+					confirm: 'بله',
+					cancel: 'انصراف'
+				},
+				className: 'align'
+			}).then((isConfirmed) => {
+				if (isConfirmed) {
+					$this.urls = []
+					swal({
+						title: "عملیات موفق",
+						text: "تصاویر حذف شدند"
+					});
+				}
+			});
 		},
 	},
 	mounted() {

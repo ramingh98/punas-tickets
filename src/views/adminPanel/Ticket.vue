@@ -44,7 +44,8 @@
 										<div class="d-flex overflow-hidden">
 											<div class="chat-message-wrapper flex-grow-1 w-50">
 												<div class="chat-message-text">
-													<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+													<p class="mb-0 chat-background" v-html="item.Message"
+														style="color: white;"></p>
 													<div v-for="(attachedFile, fileIndex) in item.Attachments"
 														:key="fileIndex">
 														<a target="blank" :href="attachedFile.FilePath"
@@ -68,8 +69,9 @@
 					<Form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
 						<Field as="textarea" :rules="validateMessage" name="message" :validate-on-input="true"
 							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;" />
+							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;width: 64%;" />
 						<div class="message-actions d-flex align-items-center">
+							<p style="font-size: 20px;">پسوند تصاویر JPG و PNG باشد</p>
 							<label for="attach-doc" class="form-label mb-0">
 								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
 								<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
@@ -79,7 +81,8 @@
 								<i class="ti ti-send me-md-1 me-0"></i>
 								<span class="align-middle d-md-inline-block d-none">ارسال</span>
 							</button>
-							<button type="button" v-if="urls.length > 0" @click="deleteAttachments" class="btn btn-danger send-msg-btn">
+							<button type="button" v-if="urls.length > 0" @click="deleteAttachments"
+								class="btn btn-danger send-msg-btn">
 								<i class="ti ti-x me-md-1 me-0"></i>
 								<span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
 									ها</span>
@@ -210,3 +213,12 @@ export default {
 	},
 }
 </script>
+<style scoped>
+.chat-background {
+	color: black !important;
+	display: inline-block;
+	background-color: rgb(191, 249, 255);
+	padding: 10px;
+	border-radius: 5px;
+}
+</style>

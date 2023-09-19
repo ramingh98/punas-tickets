@@ -82,7 +82,7 @@
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
-  font-size: var(--bs-body-font-size);
+  font-size: 1.2rem;
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
@@ -218,7 +218,7 @@ mark, .mark {
 sub,
 sup {
   position: relative;
-  font-size: 0.75em;
+  font-size: 0.75rem;
   line-height: 0;
   vertical-align: baseline;
 }
@@ -249,7 +249,7 @@ code,
 kbd,
 samp {
   font-family: var(--bs-font-monospace);
-  font-size: 1em;
+  font-size: 1rem;
 }
 
 pre {
