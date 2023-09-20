@@ -127,9 +127,7 @@ export default {
 				UserName: $this.phoneNumber,
 				ConfirmCode: $this.confirmCode
 			}).then(function (result) {
-				console.log(result);
 				if (result.data.IsSuccess) {
-					console.log(result.data);
 					localStorage.setItem("token", result.data.Value.Token);
 					localStorage.setItem("role", "user");
 					toast.success("ورود موفقیت آمیز به سیستم", {
@@ -147,7 +145,6 @@ export default {
 					$this.loading = false;
 				}
 			}).catch(function (result) {
-				console.log(result);
 				toast.error(result.response.data.Message, {
 					// override the global option
 					position: 'top'

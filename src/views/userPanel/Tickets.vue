@@ -1,8 +1,9 @@
 <template>
+	<loader v-if="loading" />
 	<div class="row">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
-				<h4 class="card-header">عنوان: {{ item.TicketTitle }}</h4>
+				<h4 class="card-header">عنوان: {{ item.Title }}</h4>
 				<div class="card-body">
 					<p>تاریخ ثبت: {{ item.RegDateTime }}</p>
 					<div>
@@ -28,7 +29,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="card">
+	<!-- <div class="card">
 		<div class="card-header flex-column flex-md-row">
 			<div class="dt-action-buttons pt-3 pt-md-0">
 				<div class="dt-buttons btn-group flex-wrap">
@@ -82,7 +83,7 @@
 				</table>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">

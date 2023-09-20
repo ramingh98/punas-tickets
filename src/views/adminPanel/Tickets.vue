@@ -1,4 +1,5 @@
 <template>
+	<loader v-if="loading" />
 	<div class="row">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
@@ -29,7 +30,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="card">
+	<!-- <div class="card">
 		<div class="card-datatable table-responsive">
 			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
 				<table class="dt-fixedheader table dataTable dtr-column collapsed" id="DataTables_Table_1"
@@ -80,7 +81,7 @@
 				</table>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </template>
 <script>
 import swal from 'sweetalert';
