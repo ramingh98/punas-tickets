@@ -98,15 +98,24 @@ export default {
 				if (result.data.IsSuccess) {
 					localStorage.setItem("HashId", result.data.Value.HashId);
 					$this.sendPhone = false;
-					toast.success("کد تایید ارسال شد");
+					toast.success("کد تایید ارسال شد", {
+					// override the global option
+					position: 'top'
+				});
 					$this.loading = false;
 				}
 				else {
-					toast.error(result);
+					toast.error(result, {
+					// override the global option
+					position: 'top'
+				});
 					$this.loading = false;
 				}
 			}).catch(function (result) {
-				toast.error(result.response.data.Message);
+				toast.error(result.response.data.Message, {
+					// override the global option
+					position: 'top'
+				});
 				$this.loading = false;
 			})
 		},
@@ -123,17 +132,26 @@ export default {
 					console.log(result.data);
 					localStorage.setItem("token", result.data.Value.Token);
 					localStorage.setItem("role", "user");
-					toast.success("ورود موفقیت آمیز به سیستم");
+					toast.success("ورود موفقیت آمیز به سیستم", {
+						// override the global option
+						position: 'top'
+					});
 					window.location.href = "/userPanel/tickets";
 					$this.loading = false;
 				}
 				else {
-					toast.error(result.Message);
+					toast.error(result.Message, {
+						// override the global option
+						position: 'top'
+					});
 					$this.loading = false;
 				}
 			}).catch(function (result) {
 				console.log(result);
-				toast.error(result.response.data.Message);
+				toast.error(result.response.data.Message, {
+					// override the global option
+					position: 'top'
+				});
 				$this.loading = false;
 			})
 		},

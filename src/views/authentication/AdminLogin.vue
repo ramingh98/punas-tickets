@@ -81,15 +81,24 @@ export default {
 				if (result.data.IsSuccess) {
 					localStorage.setItem("token", result.data.Value.Token);
 					localStorage.setItem("role", "admin");
-					toast.success("ورود موفقیت آمیز به سیستم");
+					toast.success("ورود موفقیت آمیز به سیستم", {
+						// override the global option
+						position: 'top'
+					});
 					window.location.href = "/AdminPanel/tickets";
 				}
 				else {
-					toast.error(result.data.Message);
+					toast.error(result.data.Message, {
+						// override the global option
+						position: 'top'
+					});
 				}
 			}).catch(function (result) {
 				console.log(result);
-				toast.error('مشکلی در عملیات بوجود آمد');
+				toast.error('مشکلی در عملیات بوجود آمد', {
+					// override the global option
+					position: 'top'
+				});
 			})
 		},
 		userNameValidation: function (userName) {

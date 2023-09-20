@@ -28,10 +28,12 @@
 												<div class="chat-message-text"
 													style="background-color: #7367f0 !important;width: fit-content; border-radius: 5px; padding: 9px;">
 													<p class="mb-0" v-html="item.Message" style="color: white;"></p>
+													<hr v-if="item.Attachments.length > 0" style="color: rgb(0, 200, 255);">
 													<div v-for="(attachedFile, fileIndex) in item.Attachments"
 														:key="fileIndex">
 														<a target="blank" :href="attachedFile.FilePath"
-															style="color: white;">دانلود پیوست</a>
+															style="color: rgb(91, 255, 127);">دانلود پیوست {{ fileIndex+= 1
+															}}</a>
 													</div>
 												</div>
 												<div class="text-muted mt-1" style="text-align: right;">
@@ -43,14 +45,14 @@
 									<li v-else class="chat-message" style="text-align: left;">
 										<div class="d-flex overflow-hidden">
 											<div class="chat-message-wrapper flex-grow-1 w-50">
-												<div class="chat-message-text">
-													<p class="mb-0 chat-background" v-html="item.Message"
-														style="color: white;"></p>
+												<div class="chat-message-text chat-background">
+													<p class="mb-0 " v-html="item.Message" style="color: rgb(0, 0, 0);"></p>
+													<hr v-if="item.Attachments.length > 0" style="color: rgb(0, 200, 255);">
 													<div v-for="(attachedFile, fileIndex) in item.Attachments"
 														:key="fileIndex">
 														<a target="blank" :href="attachedFile.FilePath"
-															style="color: white;">دانلود
-															پیوست</a>
+															style="color: rgb(0, 42, 255);">دانلود
+															پیوست {{ fileIndex+= 1 }}</a>
 													</div>
 												</div>
 												<div class="text-muted mt-1">
@@ -69,9 +71,9 @@
 					<Form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
 						<Field as="textarea" :rules="validateMessage" name="message" :validate-on-input="true"
 							class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;width: 64%;" />
+							placeholder="متن پیام را وارد نمایید ..." style="height: 100px;width: 100%;" />
 						<div class="message-actions d-flex align-items-center">
-							<p style="font-size: 20px;">پسوند تصاویر JPG و PNG باشد</p>
+
 							<label for="attach-doc" class="form-label mb-0">
 								<i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
 								<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
@@ -88,7 +90,9 @@
 									ها</span>
 							</button>
 						</div>
+
 					</Form>
+					<p style="font-size: 20px;">پسوند تصاویر ارسالی باید JPG و PNG باشد</p>
 				</div>
 			</div>
 		</div>
@@ -139,7 +143,10 @@ export default {
 				reader.readAsDataURL(file);
 			}
 			setTimeout(() => {
-				toast.success(`${self.urls.length} عکس انتخاب شد`)
+				toast.success(`${self.urls.length} عکس انتخاب شد`, {
+					// override the global option
+					position: 'top'
+				})
 				console.log(self.urls);
 			}, 1000);
 		},
@@ -155,7 +162,10 @@ export default {
 				$this.scrollTop();
 			}).catch(function (result) {
 				console.log(result);
-				toast.error("خطای سرور")
+				toast.error("خطای سرور", {
+					// override the global option
+					position: 'top'
+				})
 				$this.loading = false;
 			})
 		},
@@ -179,7 +189,10 @@ export default {
 				$this.loading = false;
 			}).catch(function (result) {
 				$this.loading = false;
-				toast.error(result.response.data.Message);
+				toast.error(result.response.data.Message, {
+					// override the global option
+					position: 'top'
+				});
 			})
 		},
 		deleteAttachments: function () {
@@ -199,7 +212,8 @@ export default {
 					$this.urls = []
 					swal({
 						title: "عملیات موفق",
-						text: "تصاویر حذف شدند"
+						text: "تصاویر حذف شدند",
+						buttons: 'حله'
 					});
 				}
 			});

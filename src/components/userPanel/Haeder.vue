@@ -15,6 +15,9 @@
 			</div>
 
 			<ul class="navbar-nav flex-row align-items-center ms-auto">
+				<li class="nav-item me-2 me-xl-0">
+					<span class="fw-semibold d-block">{{ userName }}</span>
+				</li>
 				<!-- User -->
 				<li class="nav-item navbar-dropdown dropdown-user dropdown">
 					<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -31,9 +34,6 @@
 											<img src="../../../public/assets/img/avatars/1.png" alt
 												class="h-auto rounded-circle" />
 										</div>
-									</div>
-									<div class="flex-grow-1">
-										<span class="fw-semibold d-block">{{ userName }}</span>
 									</div>
 								</div>
 							</a>

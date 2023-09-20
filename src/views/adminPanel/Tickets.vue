@@ -3,7 +3,7 @@
 		<div class="card-datatable table-responsive">
 			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
 				<table class="dt-fixedheader table dataTable dtr-column collapsed" id="DataTables_Table_1"
-					aria-describedby="DataTables_Table_1_info" style="width: 1046px;">
+					aria-describedby="DataTables_Table_1_info">
 					<thead>
 						<tr>
 							<th tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">
@@ -39,7 +39,7 @@
 								</RouterLink>
 								<button v-if="item.Status != 'بسته شده'" @click="closeTicket(item.TicketId)"
 									:style="{ 'margin-right': '5px' }" type="button"
-									class="btn rounded-pill btn-danger waves-effect waves-light">
+									class="btn rounded-pill btn-danger waves-effect waves-light m-2">
 									بستن
 								</button>
 							</td>
@@ -79,7 +79,10 @@ export default {
 					$this.loading = false;
 				}
 				else {
-					toast.error('خطای سرور')
+					toast.error('خطای سرور', {
+						// override the global option
+						position: 'top'
+					})
 					$this.loading = false;
 				}
 
