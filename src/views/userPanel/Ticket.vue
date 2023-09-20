@@ -5,13 +5,21 @@
 			<div class="chat-history-wrapper">
 				<div class="chat-history-header border-bottom">
 					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex overflow-hidden align-items-center">
+						<div class="d-flex overflow-hidden align-items-center" style="margin-right: 15px;">
 							<div class="chat-contact-info flex-grow-1 ms-2">
 								<h2 class="m-0">{{ title }}</h2>
 							</div>
 						</div>
 						<div class="d-flex align-items-center">
-							<h4>{{ status }}</h4>
+							<span v-if="status == 'در انتظار پاسخ'" class="badge bg-label-info">
+								در انتظار پاسخ
+							</span>
+							<span v-if="status == 'پاسخ داده شده'" class="badge bg-label-success">
+								پاسخ داده شده
+							</span>
+							<span v-if="status == 'بسته شده'" class="badge bg-label-danger">
+								بسته شده
+							</span>
 						</div>
 					</div>
 				</div>

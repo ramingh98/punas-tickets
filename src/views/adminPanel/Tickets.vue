@@ -1,4 +1,34 @@
 <template>
+	<div class="row">
+		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
+			<div class="card">
+				<h4 class="card-header">عنوان: {{ item.TicketTitle }}</h4>
+				<div class="card-body">
+					<p>تاریخ ثبت: {{ item.RegDateTime }}</p>
+					<div>
+						<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار
+							پاسخ</span>
+						<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">پاسخ داده
+							شده</span>
+						<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
+					</div>
+					<div class="mt-4">
+						<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">
+							<button :style="{ 'white-space': 'nowrap' }" type="button"
+								class="btn rounded-pill btn-primary waves-effect waves-light">
+								گفتگو ها
+							</button>
+						</RouterLink>
+						<button v-if="item.Status != 'بسته شده'" @click="closeTicket(item.TicketId)"
+							:style="{ 'margin-right': '5px' }" type="button"
+							class="btn rounded-pill btn-danger waves-effect waves-light m-2">
+							بستن
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="card">
 		<div class="card-datatable table-responsive">
 			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
@@ -23,7 +53,7 @@
 						<tr v-for="item in tickets" :key="item.id">
 							<td v-text="item.TicketTitle">
 							</td>
-							<td v-text="item.RegDateTime"></td>
+
 							<td>
 								<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار
 									پاسخ</span>
@@ -33,7 +63,8 @@
 							</td>
 							<td :style="{ 'text-align-last': 'center' }">
 								<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">
-									<button type="button" class="btn rounded-pill btn-dark waves-effect waves-light">
+									<button :style="{ 'white-space': 'nowrap' }" type="button"
+										class="btn rounded-pill btn-dark waves-effect waves-light">
 										گفتگو ها
 									</button>
 								</RouterLink>
@@ -43,6 +74,7 @@
 									بستن
 								</button>
 							</td>
+							<td v-text="item.RegDateTime" class="text-center"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -75,7 +107,6 @@ export default {
 			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
-					console.log(result.data);
 					$this.loading = false;
 				}
 				else {
@@ -87,7 +118,6 @@ export default {
 				}
 
 			}).catch(function (result) {
-				console.log(result);
 				$this.loading = false;
 				//toast.error(result)
 			})
@@ -108,7 +138,6 @@ export default {
 				if (isConfirmed) {
 					$this.loading = true;
 					axios.panelUrl.post(`/v1/Tickets/Ticket/CloseTicket/${id}`).then(function (result) {
-						console.log(result);
 						$this.getTickets();
 						$this.loading = false;
 						swal({

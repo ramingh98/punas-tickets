@@ -1,6 +1,6 @@
 <template>
 	<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-		<div class="app-brand demo mt-3">
+		<div class="app-brand demo mt-3" @click="closeSideBar">
 			<router-link to="/AdminPanel/tickets" class="app-brand-link">
 				<img src="../../assets/logo.png" style="width: 20%;">
 				<span class="app-brand-text demo menu-text fw-bold">پشتیبانی پوناس</span>
@@ -14,7 +14,7 @@
 		<ul class="menu-inner py-1 mt-3">
 			<!-- Dashboards -->
 			<li class="menu-item active">
-				<router-link to="/AdminPanel/tickets" class="menu-link">
+				<router-link to="/AdminPanel/tickets" class="menu-link" @click="closeSideBar">
 					<i class="menu-icon tf-icons ti ti-smart-home"></i>
 					<div data-i18n="Analytics">تیکت ها</div>
 				</router-link>

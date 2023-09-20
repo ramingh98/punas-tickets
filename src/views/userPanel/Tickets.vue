@@ -1,4 +1,33 @@
 <template>
+	<div class="row">
+		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
+			<div class="card">
+				<h4 class="card-header">عنوان: {{ item.TicketTitle }}</h4>
+				<div class="card-body">
+					<p>تاریخ ثبت: {{ item.RegDateTime }}</p>
+					<div>
+						<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">
+							در انتظار پاسخ
+						</span>
+						<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">
+							پاسخ داده شده
+						</span>
+						<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">
+							بسته شده
+						</span>
+					</div>
+					<div class="mt-4">
+						<RouterLink :to="`/UserPanel/Ticket/${item.TicketId}`">
+							<button :style="{ 'white-space': 'nowrap' }" type="button"
+								class="btn rounded-pill btn-primary waves-effect waves-light">
+								گفتگو ها
+							</button>
+						</RouterLink>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="card">
 		<div class="card-header flex-column flex-md-row">
 			<div class="dt-action-buttons pt-3 pt-md-0">
@@ -141,7 +170,6 @@ export default {
 			}).catch(function (result) {
 				$this.loading = false;
 				toast.error('خطای سرور')
-				console.log(result);
 			})
 		},
 		handleFileChange(e) {
@@ -157,7 +185,6 @@ export default {
 			}
 			setTimeout(() => {
 				toast.success(`${self.urls.length} عکس انتخاب شد`)
-				console.log(self.urls);
 			}, 1000);
 		},
 		addTicket: function () {
@@ -179,11 +206,11 @@ export default {
 					$this.getTickets();
 					$this.loading = false;
 					toast.success('تیکت ارسال شد');
+					$this.urls = []
 				}
 			}).catch(function (result) {
 				$this.loading = false;
 				toast.error("خطای سرور");
-				console.log(result);
 			})
 		},
 		validateTitle: function (title) {
