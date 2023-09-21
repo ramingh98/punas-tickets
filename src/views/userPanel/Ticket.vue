@@ -31,12 +31,12 @@
 								style="text-align: left;">
 								<div class="d-flex overflow-hidden">
 									<div class="chat-message-wrapper flex-grow-1 w-50">
-										<div class="chat-message-text  chat-background">
-											<p class="mb-0" v-html="item.Message" style="color: rgb(0, 0, 0);"></p>
-											<hr v-if="item.Attachments.length > 0" style="color: rgb(0, 200, 255);">
+										<div class="chat-message-text  chat-background" style="text-align: right;">
+											<p class="mb-0" v-html="item.Message" style="color: #05445E;"></p>
+											<hr v-if="item.Attachments.length > 0" style="color: #05445E;">
 											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
 												<a target="blank" :href="attachedFile.FilePath"
-													style="color: rgb(0, 42, 255);">دانلود
+													style="color: #575b58;">دانلود
 													پیوست {{ fileIndex+= 1 }}</a>
 											</div>
 										</div>
@@ -50,12 +50,12 @@
 								<div class="d-flex overflow-hidden">
 									<div class="chat-message-wrapper flex-grow-1 w-50">
 										<div class="chat-message-text"
-											style="background-color: #7367f0 !important;width: fit-content; border-radius: 5px; padding: 9px;">
-											<p class="mb-0 " v-html="item.Message" style="color: white;"></p>
-											<hr v-if="item.Attachments.length > 0" style="color: rgb(0, 200, 255);">
+											style="background-color: #D4F1F4 !important;width: fit-content; border-radius: 5px; padding: 9px;">
+											<p class="mb-0 " v-html="item.Message" style="color: #05445E;"></p>
+											<hr v-if="item.Attachments.length > 0" style="color: #05445E;">
 											<div v-for="(attachedFile, fileIndex) in item.Attachments" :key="fileIndex">
 												<a target="blank" :href="attachedFile.FilePath"
-													style="color: rgb(91, 255, 127);">دانلود
+													style="color: #2F5233;">دانلود
 													پیوست {{ fileIndex+= 1 }}</a>
 											</div>
 										</div>
@@ -226,7 +226,7 @@ export default {
 .chat-background {
 	color: black !important;
 	display: inline-block;
-	background-color: rgb(191, 249, 255);
+	background-color: #75E6DA;
 	padding: 10px;
 	border-radius: 5px;
 }

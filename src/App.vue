@@ -1,6 +1,10 @@
 <template>
-	<router-view/>
-  </template>
+	<router-view />
+</template>
   
-  <style>
-  </style>
+<style>
+
+.v-toast {
+	z-index: 99999 !important;
+}
+</style>

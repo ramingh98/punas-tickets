@@ -99,16 +99,16 @@ export default {
 					localStorage.setItem("HashId", result.data.Value.HashId);
 					$this.sendPhone = false;
 					toast.success("کد تایید ارسال شد", {
-					// override the global option
-					position: 'top'
-				});
+						// override the global option
+						position: 'top'
+					});
 					$this.loading = false;
 				}
 				else {
 					toast.error(result, {
-					// override the global option
-					position: 'top'
-				});
+						// override the global option
+						position: 'top'
+					});
 					$this.loading = false;
 				}
 			}).catch(function (result) {
@@ -169,4 +169,8 @@ export default {
 	}
 }
 </script>
-<style></style>
+<style scoped>
+body {
+	overflow: hidden !important;
+}
+</style>
