@@ -1,6 +1,16 @@
 <template>
 	<loader v-if="loading" />
-	<div class="row">
+	<div class="card-header flex-column flex-md-row">
+		<div class="dt-action-buttons pt-3 pt-md-0">
+			<div class="dt-buttons btn-group flex-wrap">
+				<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
+					data-bs-target="#basicModal">
+					ارسال تیکت
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-4">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
 				<h4 class="card-header">عنوان: {{ item.Title }}</h4>
