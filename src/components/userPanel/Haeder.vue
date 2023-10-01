@@ -42,6 +42,12 @@
 							<div class="dropdown-divider"></div>
 						</li>
 						<li>
+							<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePassword" style="">
+								<i class="ti ti-key me-2 ti-sm"></i>
+								<span class="align-middle">ویرایش کلمه عبور</span>
+							</a>
+						</li>
+						<li>
 							<a @click="logOut" class="dropdown-item" href="#">
 								<i class="ti ti-logout me-2 ti-sm"></i>
 								<span class="align-middle">خروج</span>

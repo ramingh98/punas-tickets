@@ -152,7 +152,7 @@ export default {
 			this.id = this.$route.params.id;
 			var $this = this;
 			$this.loading = true;
-			axios.weblUrl.get(`/v1/Tickets/Tickets/Find/${this.id}`).then(function (result) {
+			axios.weblUrl.get(`/Tickets/Tickets/Find/${this.id}`).then(function (result) {
 				$this.ticket = result.data.Value.CustomerTickets;
 				$this.title = result.data.Value.Title
 				$this.status = result.data.Value.Status
@@ -167,7 +167,7 @@ export default {
 			var $this = this;
 			$this.loading = true;
 			console.log(encodeURIComponent($this.message));
-			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
+			axios.weblUrl.post('/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.message,
 				"TicketId": $this.id,
 				"Message": this.message.replace(/\n/g, '<br/>'),

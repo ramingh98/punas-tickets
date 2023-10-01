@@ -170,7 +170,7 @@ export default {
 		getTickets: function () {
 			var $this = this;
 			$this.loading = true;
-			axios.weblUrl.get('/v1/Tickets/Tickets/Read').then(function (result) {
+			axios.weblUrl.get('/Tickets/Tickets/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value
 				}
