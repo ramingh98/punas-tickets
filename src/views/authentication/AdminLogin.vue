@@ -2,6 +2,7 @@
 	<div class="container-xxl">
 		<div class="authentication-wrapper authentication-basic container-p-y">
 			<div class="authentication-inner py-4">
+				<loader v-if="loading" />
 				<!-- Login -->
 				<div class="card">
 					<div class="card-body">
@@ -58,6 +59,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from 'vue-toast-notification';
 import axios from '../../utils/axios'
+import loader from '@/components/Loader.vue'
 
 const toast = useToast();
 
@@ -65,15 +67,18 @@ export default {
 	data() {
 		return {
 			userName: '',
-			password: ''
+			password: '',
+			loading: false
 		}
 	},
 	components: {
-		Form, Field, ErrorMessage
+		Form, Field, ErrorMessage, loader
 	},
 	methods: {
 		submit: function () {
+			
 			var $this = this;
+			$this.loading = true;
 			axios.panelUrl.post("/v1/Identities/Authentication/Login", {
 				UserName: this.userName,
 				Password: this.password
@@ -85,6 +90,7 @@ export default {
 						// override the global option
 						position: 'top'
 					});
+					$this.loading = false;
 					window.location.href = "/AdminPanel/tickets";
 				}
 				else {
@@ -92,13 +98,14 @@ export default {
 						// override the global option
 						position: 'top'
 					});
+					$this.loading = false;
 				}
 			}).catch(function (result) {
-				console.log(result);
 				toast.error('مشکلی در عملیات بوجود آمد', {
 					// override the global option
 					position: 'top'
 				});
+				$this.loading = false;
 			})
 		},
 		userNameValidation: function (userName) {

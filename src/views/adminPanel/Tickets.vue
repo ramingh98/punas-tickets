@@ -3,6 +3,7 @@
 	<div class="row">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
+				<h4 class="card-header">ارسال کننده: {{ item.CustomerFullName }}</h4>
 				<h4 class="card-header">عنوان: {{ item.TicketTitle }}</h4>
 				<div class="card-body">
 					<p>تاریخ ثبت: {{ item.RegDateTime }}</p>
@@ -108,6 +109,7 @@ export default {
 			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
+					console.log($this.tickets);
 					$this.loading = false;
 				}
 				else {

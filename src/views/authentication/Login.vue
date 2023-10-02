@@ -11,7 +11,7 @@
 							<img src="../../assets/logo.png" style="width: 20%;">
 							<span class="app-brand-text demo menu-text fw-bold">پویا نگار ارتباط سپهر</span>
 							<!-- /Logo -->
-							<h4 class="mb-3 pt-2">سیستم پشتیبانی</h4>
+							<h4 class="mb-3 pt-2">به سیستم پشتیبانی پوناس خوش آمدید!</h4>
 						</div>
 						<div v-if="loginWithUserName == true" id="sendPhone">
 							<p class="mb-4 mt-3">جهت ورود به حساب کاربری شماره موبایل و کلمه عبور خود را وارد نمایید</p>
@@ -69,6 +69,9 @@
 										<button class="btn btn-primary d-grid w-100" type="submit">ورود</button>
 									</div>
 								</Form>
+								<a @click="reSendCode" style="cursor: pointer; color: rgb(0, 128, 255);">
+									ارسال مجدد
+								</a>
 							</div>
 						</div>
 					</div>
@@ -181,6 +184,35 @@ export default {
 				else {
 					toast.error(result.Message, {
 						// override the global option
+						position: 'top'
+					});
+					$this.loading = false;
+				}
+			}).catch(function (result) {
+				toast.error(result.response.data.Message, {
+					// override the global option
+					position: 'top'
+				});
+				$this.loading = false;
+			})
+		},
+		reSendCode: function () {
+			var $this = this;
+			$this.loading = true;
+			$("#icon").show();
+			axios.weblUrl.post("/api/Identities/ConfirmationCodes/AddForLogin", {
+				UserName: this.phoneNumber
+			}).then(function (result) {
+				if (result.data.IsSuccess) {
+					localStorage.removeItem("HashId");
+					localStorage.setItem("HashId", result.data.Value.HashId);
+					toast.success("کد تایید ارسال شد", {
+						position: 'top'
+					});
+					$this.loading = false;
+				}
+				else {
+					toast.error(result, {
 						position: 'top'
 					});
 					$this.loading = false;
