@@ -14,10 +14,10 @@
 							<h4 class="mb-3 pt-2">به سیستم پشتیبانی پوناس خوش آمدید!</h4>
 						</div>
 						<div v-if="loginWithUserName == true" id="sendPhone">
-							<p class="mb-4 mt-3">جهت ورود به حساب کاربری شماره موبایل و کلمه عبور خود را وارد نمایید</p>
+							<p class="mb-4 mt-3">جهت ورود به حساب کاربری نام کاربری و کلمه عبور خود را وارد نمایید</p>
 							<Form @submit="login" id="formAuthentication" class="mb-3" action="index.html" method="POST">
 								<div class="mb-3">
-									<label for="email" class="form-label">شماره موبایل</label>
+									<label for="email" class="form-label">نام کاربری</label>
 									<Field type="text" class="form-control" :rules="phoneNumberValidation"
 										v-model="phoneNumber" name="phoneNumber" :validateOnInput="true" autofocus />
 									<ErrorMessage name="phoneNumber" />
@@ -38,11 +38,11 @@
 						</div>
 						<div v-else>
 							<div v-if="sendPhone == true" id="sendPhone">
-								<p class="mb-4">جهت ورود به حساب کاربری شماره موبایل خود را وارد نمایید</p>
+								<p class="mb-4">جهت ورود به حساب کاربری نام کاربری خود را وارد نمایید</p>
 								<Form @submit="submit" id="formAuthentication" class="mb-3" action="index.html"
 									method="POST">
 									<div class="mb-3">
-										<label for="email" class="form-label">شماره موبایل</label>
+										<label for="email" class="form-label">نام کاربری</label>
 										<Field type="text" class="form-control" :rules="phoneNumberValidation"
 											v-model="phoneNumber" name="phoneNumber" :validateOnInput="true" autofocus />
 										<ErrorMessage name="phoneNumber" />
@@ -92,7 +92,7 @@ const toast = useToast();
 export default {
 	data() {
 		return {
-			loginWithUserName: false,
+			loginWithUserName: true,
 			sendPhone: true,
 			phoneNumber: '',
 			confirmCode: '',

@@ -1,5 +1,11 @@
 <template>
 	<loader v-if="loading" />
+	<div class="col-4 mb-3">
+		<div class="row">
+			<label>جستجو بر اساس شناسه :</label>
+			<input @keyup="filterById" v-model="ticketId" type="number" class="form-control" />
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
@@ -13,6 +19,9 @@
 						<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">پاسخ داده
 							شده</span>
 						<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
+					</div>
+					<div>
+						<p>شناسه : {{ item.TicketId }}</p>
 					</div>
 					<div class="mt-4">
 						<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">
@@ -31,58 +40,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div class="card">
-		<div class="card-datatable table-responsive">
-			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
-				<table class="dt-fixedheader table dataTable dtr-column collapsed" id="DataTables_Table_1"
-					aria-describedby="DataTables_Table_1_info">
-					<thead>
-						<tr>
-							<th tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">
-								عنوان
-							</th>
-							<th tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">
-								تاریخ ثبت
-							</th>
-							<th tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">
-								وضعیت
-							</th>
-							<th :style="{ 'text-align-last': 'center' }">عملیات</th>
-						</tr>
-					</thead>
-					<tbody>
-						<loader v-if="loading" />
-						<tr v-for="item in tickets" :key="item.id">
-							<td v-text="item.TicketTitle">
-							</td>
-
-							<td>
-								<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار
-									پاسخ</span>
-								<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">پاسخ داده
-									شده</span>
-								<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
-							</td>
-							<td :style="{ 'text-align-last': 'center' }">
-								<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">
-									<button :style="{ 'white-space': 'nowrap' }" type="button"
-										class="btn rounded-pill btn-dark waves-effect waves-light">
-										گفتگو ها
-									</button>
-								</RouterLink>
-								<button v-if="item.Status != 'بسته شده'" @click="closeTicket(item.TicketId)"
-									:style="{ 'margin-right': '5px' }" type="button"
-									class="btn rounded-pill btn-danger waves-effect waves-light m-2">
-									بستن
-								</button>
-							</td>
-							<td v-text="item.RegDateTime" class="text-center"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div> -->
 </template>
 <script>
 import swal from 'sweetalert';
@@ -96,17 +53,20 @@ export default {
 	data() {
 		return {
 			tickets: [],
-			loading: false
+			loading: false,
+			ticketId: null
 		}
 	},
 	components: {
 		Form, Field, ErrorMessage, loader
 	},
 	methods: {
-		getTickets: function () {
+		filterById: function () {
 			var $this = this;
 			$this.loading = true;
-			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
+			$this.tickets = [];
+			axios.panelUrl.get(`/v1/Tickets/Ticket/Read/${$this.ticketId}`).then(function (result) {
+				console.log(result);
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
 					console.log($this.tickets);
@@ -114,15 +74,36 @@ export default {
 				}
 				else {
 					toast.error('خطای سرور', {
-						// override the global option
+						position: 'top'
+					})
+					$this.loading = false;
+				}
+			}).catch(function (result) {
+				$this.loading = false;
+				toast.error(result.message)
+			})
+		},
+		getTickets: function () {
+			var $this = this;
+			$this.loading = true;
+			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
+				console.log(result);
+				if (result.data.IsSuccess) {
+					$this.tickets = result.data.Value;
+					console.log($this.tickets);
+					$this.loading = false;
+				}
+				else {
+					toast.error('خطای سرور', {
 						position: 'top'
 					})
 					$this.loading = false;
 				}
 
 			}).catch(function (result) {
+				console.log(result);
 				$this.loading = false;
-				//toast.error(result)
+				toast.error(result.message)
 			})
 		},
 		closeTicket: function (id) {

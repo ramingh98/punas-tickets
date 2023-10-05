@@ -27,6 +27,9 @@
 							بسته شده
 						</span>
 					</div>
+					<div>
+						<p>شناسه : {{ item.TicketId }}</p>
+					</div>
 					<div class="mt-4">
 						<RouterLink :to="`/UserPanel/Ticket/${item.TicketId}`">
 							<button :style="{ 'white-space': 'nowrap' }" type="button"
