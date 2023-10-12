@@ -168,7 +168,7 @@ export default {
 			$this.loading = true;
 			console.log(encodeURIComponent($this.message));
 			axios.weblUrl.post('/Tickets/Tickets/AddTicketByUser', {
-				"Title": $this.message,
+				"Title": $this.title,
 				"TicketId": $this.id,
 				"Message": this.message.replace(/\n/g, '<br/>'),
 				"FlutterDelta": "-----",

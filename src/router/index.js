@@ -30,6 +30,7 @@ const routes = [
 	},
 	{
 		path: '/AdminPanel', component: AdminPanel, children: [
+			{ path: 'Users', component: () => import('../views/adminPanel/Users'), meta: { requiresAuth: true, isAdmin: true, role: 'admin' } },
 			{ path: 'Tickets', component: () => import('../views/adminPanel/Tickets'), meta: { requiresAuth: true, isAdmin: true, role: 'admin' } },
 			{ path: 'Ticket/:id', name: 'Ticket', component: () => import('../views/adminPanel/Ticket'), meta: { requiresAuth: true, isAdmin: true, role: 'admin' } }
 		]
