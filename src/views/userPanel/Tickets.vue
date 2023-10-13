@@ -42,61 +42,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div class="card">
-		<div class="card-header flex-column flex-md-row">
-			<div class="dt-action-buttons pt-3 pt-md-0">
-				<div class="dt-buttons btn-group flex-wrap">
-					<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
-						data-bs-target="#basicModal">
-						ارسال تیکت
-					</button>
-				</div>
-			</div>
-		</div>
-		<loader v-if="loading" />
-		<div class="card-datatable table-responsive">
-			<div id="DataTables_Table_1_wrapper" class="dataTables_wrapper dt-bootstrap5">
-				<table class="dt-fixedheader table dataTable dtr-column collapsed" id="DataTables_Table_1"
-					aria-describedby="DataTables_Table_1_info" style="width: 1046px;">
-					<thead>
-						<tr>
-							<th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1"
-								aria-label="Name: activate to sort column ascending">عنوان
-							</th>
-							<th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1"
-								aria-label="Date: activate to sort column ascending">تاریخ ثبت
-							</th>
-							<th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1"
-								aria-label="Status: activate to sort column ascending">وضعیت
-							</th>
-							<th>عملیات</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="item in tickets" :key="item.id">
-							<td v-text="item.Title">
-							</td>
-							<td v-text="item.RegDateTime"></td>
-							<td>
-								<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار
-									پاسخ</span>
-								<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">پاسخ داده
-									شده</span>
-								<span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
-							</td>
-							<td>
-								<RouterLink :to="`/UserPanel/Ticket/${item.TicketId}`">
-									<button type="button" class="btn rounded-pill btn-dark waves-effect waves-light">
-										گفتگو ها
-									</button>
-								</RouterLink>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div> -->
 	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">

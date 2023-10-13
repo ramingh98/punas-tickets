@@ -13,7 +13,13 @@
 		<div class="menu-inner-shadow"></div>
 		<ul class="menu-inner py-1 mt-3">
 			<!-- Dashboards -->
-			<li class="menu-item active">
+			<li class="menu-item">
+				<router-link to="/AdminPanel/users" class="menu-link" @click="closeSideBar">
+					<i class="menu-icon tf-icons ti ti-users"></i>
+					<div data-i18n="Analytics">کاربران</div>
+				</router-link>
+			</li>
+			<li class="menu-item">
 				<router-link to="/AdminPanel/tickets" class="menu-link" @click="closeSideBar">
 					<i class="menu-icon tf-icons ti ti-smart-home"></i>
 					<div data-i18n="Analytics">تیکت ها</div>

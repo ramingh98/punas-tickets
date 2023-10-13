@@ -10,8 +10,8 @@
 	</div>
 	<div class="col-4 mb-3 mt-4">
 		<div class="row">
-			<label>جستجو بر اساس شناسه:
-			</label> <input @keyup="filterById" v-model="ticketId" type="number" class="form-control" />
+			<label>جستجو بر اساس شناسه:</label>
+			<input @keyup="filterById" v-model="ticketId" type="number" class="form-control" />
 		</div>
 	</div>
 	<div class="row">
@@ -46,7 +46,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="basicModal" tabindex="-1" aria - hidden="true" data-bs-backdrop="static">
+	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -111,10 +111,8 @@
 import swal from 'sweetalert';
 import axios from "@/utils/axios";
 import { Form, Field, ErrorMessage } from "vee-validate";
-
 import { useToast } from "vue-toast-notification";
-import
-loader from '@/components/Loader.vue'
+import loader from '@/components/Loader.vue'
 
 const toast = useToast();
 
@@ -130,29 +128,11 @@ export default {
 			message: '',
 			customerId: null
 		}
-	}
-	,
+	},
 	components: {
 		Form, Field, ErrorMessage, loader
 	},
 	methods: {
-		getUsers: function () {
-			var $this = this;
-			$this.users = [];
-
-			axios.panelUrl.get(`/v1/Identities/Customer/Read`).then(function (result) {
-				if (result.data.IsSuccess) {
-					$this.users = result.data.Value;
-					console.log($this.users);
-				}
-				else {
-					toast.error('خطای سرور', { position: 'top' })
-				}
-			}
-			).catch(function (result) {
-				toast.error(result.message)
-			})
-		},
 		filterById: function () {
 			var $this = this;
 			$this.loading = true;
@@ -168,8 +148,7 @@ export default {
 					toast.error('خطای سرور', { position: 'top' })
 					$this.loading = false;
 				}
-			}
-			).catch(function (result) {
+			}).catch(function (result) {
 				$this.loading = false;
 				toast.error(result.message)
 			})
