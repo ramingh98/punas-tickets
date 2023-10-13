@@ -53,7 +53,8 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel1">ارسال تیکت</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="resetCustomerId"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+						@click="resetCustomerId"></button>
 				</div>
 				<Form @submit="addTicket">
 					<div class="modal-body">
@@ -81,7 +82,8 @@
 							<input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
 								@change="handleFileChange" />
 						</label>
-						<button @click="resetCustomerId" type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+						<button @click="resetCustomerId" type="button" class="btn btn-label-secondary"
+							data-bs-dismiss="modal">
 							بستن
 						</button>
 						<button type="submit" class="btn btn-primary">ارسال</button>
@@ -124,16 +126,14 @@ export default {
 	methods: {
 		setCustomerId: function (Id) {
 			this.customerId = Id;
-			console.log(this.customerId);
 		},
 		resetCustomerId: function () {
 			this.customerId = null;
-			console.log(this.customerId);
 		},
 		addTicket: function () {
 			var $this = this;
 			$this.loading = true;
-			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
+			axios.panelUrl.post('/v1/Tickets/Ticket/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
 				"Message": this.message.replace(/\n/g, '<br/>'),
@@ -147,14 +147,15 @@ export default {
 					$('#basicModal').modal('hide');
 					$this.title = '';
 					$this.message = '';
-					$this.getTickets();
 					$this.loading = false;
 					toast.success('تیکت ارسال شد');
 					$this.urls = []
+					$this.customerId = null;
 				}
 			}).catch(function (result) {
 				$this.loading = false;
 				toast.error("خطای سرور");
+				$this.customerId = null;
 			})
 		},
 		getUsers: function () {
@@ -164,7 +165,6 @@ export default {
 			axios.panelUrl.get(`/v1/Identities/Customer/Read`).then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.users = result.data.Value;
-					console.log($this.users);
 					$this.loading = false;
 				}
 				else {
