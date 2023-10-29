@@ -76,9 +76,10 @@
                 <!-- Chat message form -->
                 <div class="chat-history-footer shadow-sm">
                     <Form @submit="sendMessage" class="form-send-message d-flex justify-content-between align-items-center">
-                        <Field as="textarea" :rules="validateMessage" name="message" :validate-on-input="true"
-                            class="form-control message-input border-0 me-3 shadow-none" v-model="message"
-                            placeholder="متن پیام را وارد نمایید ..." style="height: 100px; width: 100%" />
+                        <div style="width: 100%; color: black; direction: rtl;border-radius: 200px;">
+                            <div id="editor">
+                            </div>
+                        </div>
                         <div class="message-actions d-flex align-items-center">
                             <label for="attach-doc" class="form-label mb-0">
                                 <i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
@@ -109,6 +110,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from "vue-toast-notification";
 import loader from "@/components/Loader.vue";
 import swal from "sweetalert";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const toast = useToast();
 
@@ -120,9 +122,12 @@ export default {
             message: "",
             title: "",
             status: "",
+            read: "",
             fileInput: [],
             urls: [],
             loading: false,
+            editor: ClassicEditor,
+            editorData: ''
         };
     },
     components: {
@@ -130,6 +135,26 @@ export default {
     },
     mounted() {
         this.getMessages();
+        ClassicEditor.create(document.querySelector('#editor'), {
+            language: {
+                ui: 'en',
+                content: 'ar'
+            },
+            toolbar: {
+                items: [
+                    'bold',
+                    'italic',
+                    '|',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'fontFamily',
+                    '|',
+                    'undo',
+                    'redo', '|', "Essentials", "CKFinderUploadAdapter", "Autoformat", "BlockQuote", "CKBox", "Link"
+                ]
+            }
+        }).then(editor => { window.editor = editor; }).catch(err => { console.error(err.stack); });
     },
     methods: {
         scrollTop() {
@@ -162,6 +187,7 @@ export default {
                 $this.ticket = result.data.Value.CustomerTickets;
                 $this.title = result.data.Value.Title;
                 $this.status = result.data.Value.Status;
+                $this.read = result.data.Value.Read;
                 $this.loading = false;
                 $this.scrollTop();
             }).catch(function (result) {
@@ -175,10 +201,11 @@ export default {
         sendMessage: function () {
             var $this = this;
             $this.loading = true;
+            const data = editor.getData();
             axios.panelUrl.post("/v1/Tickets/Ticket/AddTicketByUser", {
                 Title: $this.title,
                 TicketId: $this.id,
-                Message: this.message.replace(/\n/g, "<br/>"),
+                Message: data,
                 FlutterDelta: "-----",
                 SupporterId: null,
                 Rate: null,
@@ -187,6 +214,7 @@ export default {
                 toast.success("پیام ارسال شد");
                 $this.message = "";
                 $this.getMessages();
+                editor.setData("<p></p>");
                 $this.urls = [];
                 $this.loading = false;
             }).catch(function (result) {

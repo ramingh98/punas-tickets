@@ -1,5 +1,11 @@
 <template>
 	<loader v-if="loading" />
+	<div class="col-4 mb-3 mt-4" style="margin-right: 12px;">
+		<div class="row">
+			<label>جستجو بر اساس شناسه:</label>
+			<input @keyup="filterByName" v-model="name" type="text" class="form-control" />
+		</div>
+	</div>
 	<div class="card mb-4">
 		<div class="card-body">
 			<div class="table-responsive table-responsive-min-height">
@@ -24,6 +30,7 @@
 							</tr>
 						</thead>
 						<tbody>
+
 							<tr v-for="item in users" :key="item.Id">
 								<td v-text="item.FullName"></td>
 								<td v-text="item.BusinesseName"></td>
@@ -44,6 +51,9 @@
 							</tr>
 						</tbody>
 					</table>
+					<div v-if="users.length == 0" class="alert alert-primary text-center" role="alert">
+						موردی یافت نشد
+					</div>
 				</div>
 			</div>
 		</div>
@@ -69,9 +79,10 @@
 						<div class="row">
 							<div class="col mb-3">
 								<label for="nameBasic" class="form-label">متن پیام</label>
-								<Field :validate-on-input="true" v-model="message" as="textarea" type="text"
-									:rules="validateMessage" name="message" class="form-control" />
-								<ErrorMessage name="message" />
+								<div style="width: 100%; color: black; direction: rtl;border-radius: 200px;">
+									<div id="editor">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -105,6 +116,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from "vue-toast-notification";
 import loader from '@/components/Loader.vue'
 import swal from 'sweetalert';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const toast = useToast();
 
@@ -117,15 +129,39 @@ export default {
 			urls: [],
 			users: [],
 			message: '',
-			customerId: null
+			customerId: null,
+			name: '',
+			editor: ClassicEditor,
+			editorData: ''
 		}
 	},
 	components: {
 		Form, Field, ErrorMessage, loader
 	},
 	methods: {
+		filterByName: function () {
+			var $this = this;
+			$this.loading = true;
+			$this.users = [];
+			axios.panelUrl.get(`/v1/Identities/Customer/Read?name=${$this.name}`).then(function (result) {
+				console.log(result);
+				if (result.data.IsSuccess) {
+					$this.users = result.data.Value;
+					console.log($this.tickets);
+					$this.loading = false;
+				}
+				else {
+					toast.error('خطای سرور', { position: 'top' })
+					$this.loading = false;
+				}
+			}).catch(function (result) {
+				$this.loading = false;
+				toast.error(result.message)
+			})
+		},
 		setCustomerId: function (Id) {
 			this.customerId = Id;
+
 		},
 		resetCustomerId: function () {
 			this.customerId = null;
@@ -133,10 +169,11 @@ export default {
 		addTicket: function () {
 			var $this = this;
 			$this.loading = true;
+			const data = editor.getData()
 			axios.panelUrl.post('/v1/Tickets/Ticket/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
-				"Message": this.message.replace(/\n/g, '<br/>'),
+				"Message": data,
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
@@ -227,7 +264,36 @@ export default {
 		},
 	},
 	mounted() {
+		$('#basicModal').modal({
+			focus: false,
+		});
 		this.getUsers();
+		ClassicEditor.create(document.querySelector('#editor'), {
+			language: {
+				ui: 'en',
+				content: 'ar'
+			},
+			toolbar: {
+				items: [
+					'bold',
+					'italic',
+					'|',
+					'bulletedList',
+					'numberedList',
+					'|',
+					'fontFamily',
+					'|',
+					'undo',
+					'redo', '|', "Essentials", "CKFinderUploadAdapter", "Autoformat", "BlockQuote", "CKBox", "Link"
+				]
+			}
+		}).then(editor => { window.editor = editor; }).catch(err => { console.error(err.stack); });
 	},
 }
 </script>
+<style>
+:root {
+	--ck-z-default: 100;
+	--ck-z-modal: calc(var(--ck-z-default) + 999);
+}
+</style>

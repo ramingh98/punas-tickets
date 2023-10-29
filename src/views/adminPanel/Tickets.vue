@@ -1,14 +1,6 @@
 <template>
 	<loader v-if="loading" />
-	<div class="card-header flex-column flex-md-row">
-		<div class="dt-action-buttons pt-3 pt-md-0">
-			<div class="dt-buttons btn-group flex-wrap">
-				<button type="button" @click="getUsers" class="btn btn-primary waves-effect waves-light"
-					data-bs-toggle="modal" data-bs-target="#basicModal">ارسال تیکت </button>
-			</div>
-		</div>
-	</div>
-	<div class="col-4 mb-3 mt-4">
+	<div class="col-4 mb-3 mt-4" style="margin-right: 12px;">
 		<div class="row">
 			<label>جستجو بر اساس شناسه:</label>
 			<input @keyup="filterById" v-model="ticketId" type="number" class="form-control" />
@@ -31,6 +23,9 @@
 					</div>
 					<div>
 						<p>شناسه : {{ item.TicketId }}</p>
+					</div>
+					<div>
+						<p>وضعیت : {{ item.Read }}</p>
 					</div>
 					<div class="mt-4">
 						<RouterLink :to="`/AdminPanel/Ticket/${item.TicketId}`">

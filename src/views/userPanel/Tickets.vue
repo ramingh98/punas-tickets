@@ -62,9 +62,10 @@
 						<div class="row">
 							<div class="col mb-3">
 								<label for="nameBasic" class="form-label">متن پیام</label>
-								<Field :validate-on-input="true" v-model="message" as="textarea" type="text"
-									:rules="validateMessage" name="message" class="form-control" />
-								<ErrorMessage name="message" />
+								<div style="width: 100%; color: black; direction: rtl;border-radius: 200px;">
+									<div id="editor">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -97,6 +98,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import { useToast } from "vue-toast-notification";
 import loader from '@/components/Loader.vue'
 import swal from 'sweetalert';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const toast = useToast();
 
@@ -109,6 +111,8 @@ export default {
 			loading: false,
 			fileInput: [],
 			urls: [],
+			editor: ClassicEditor,
+			editorData: ''
 		}
 	},
 	components: {
@@ -149,10 +153,11 @@ export default {
 		addTicket: function () {
 			var $this = this;
 			$this.loading = true;
+			const data = editor.getData()
 			axios.weblUrl.post('/v1/Tickets/Tickets/AddTicketByUser', {
 				"Title": $this.title,
 				"TicketId": null,
-				"Message": this.message.replace(/\n/g, '<br/>'),
+				"Message": data,
 				"FlutterDelta": "-----",
 				"SupporterId": null,
 				"Rate": null,
@@ -209,6 +214,35 @@ export default {
 	},
 	mounted() {
 		this.getTickets();
+		$('#basicModal').modal({
+			focus: false,
+		});
+		ClassicEditor.create(document.querySelector('#editor'), {
+			language: {
+				ui: 'en',
+				content: 'ar'
+			},
+			toolbar: {
+				items: [
+					'bold',
+					'italic',
+					'|',
+					'bulletedList',
+					'numberedList',
+					'|',
+					'fontFamily',
+					'|',
+					'undo',
+					'redo', '|', "Essentials", "CKFinderUploadAdapter", "Autoformat", "BlockQuote", "CKBox", "Link"
+				]
+			}
+		}).then(editor => { window.editor = editor; }).catch(err => { console.error(err.stack); });
 	},
 }
 </script>
+<style>
+:root {
+	--ck-z-default: 100;
+	--ck-z-modal: calc(var(--ck-z-default) + 999);
+}
+</style>
