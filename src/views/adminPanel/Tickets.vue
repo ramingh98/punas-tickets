@@ -136,7 +136,6 @@ export default {
 				console.log(result);
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
-					console.log($this.tickets);
 					$this.loading = false;
 				}
 				else {
@@ -171,7 +170,6 @@ export default {
 				console.log(result);
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
-					console.log($this.tickets);
 					$this.loading = false;
 				}
 				else {
@@ -180,7 +178,6 @@ export default {
 				}
 
 			}).catch(function (result) {
-				console.log(result);
 				$this.loading = false;
 				toast.error(result.message)
 			})

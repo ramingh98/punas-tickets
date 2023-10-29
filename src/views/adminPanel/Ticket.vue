@@ -11,14 +11,17 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
+                            <span v-if="status == 'درحال بررسی'" class="badge bg-label-info">
+                                درحال بررسی
+                            </span>
                             <span v-if="status == 'در انتظار پاسخ'" class="badge bg-label-info">
                                 در انتظار پاسخ
                             </span>
-                            <span v-if="status == 'پاسخ داده شده'" class="badge bg-label-success">
-                                پاسخ داده شده
+                            <span v-if="status == 'پاسخ داده شد'" class="badge bg-label-success">
+                                پاسخ داده شد
                             </span>
-                            <span v-if="status == 'بسته شده'" class="badge bg-label-danger">
-                                بسته شده
+                            <span v-if="status == 'بسته شد'" class="badge bg-label-danger">
+                                بسته شد
                             </span>
                         </div>
                     </div>
@@ -134,6 +137,7 @@ export default {
         Form, Field, ErrorMessage, loader,
     },
     mounted() {
+        console.log(this.status);
         this.getMessages();
         ClassicEditor.create(document.querySelector('#editor'), {
             language: {
