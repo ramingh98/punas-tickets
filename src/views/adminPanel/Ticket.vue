@@ -23,6 +23,9 @@
                             <span v-if="status == 'بسته شد'" class="badge bg-label-danger">
                                 بسته شد
                             </span>
+                            <button v-if="status == 'در انتظار پاسخ'" @click="SetAsInProgress(id)"
+							:style="{ 'margin-right': '5px' }" type="button"
+							class="btn rounded-pill btn-danger waves-effect waves-light m-2">تنظیم به عنوان در حال بررسی است</button>
                         </div>
                     </div>
                 </div>
@@ -229,6 +232,36 @@ export default {
                 });
             });
         },
+        SetAsInProgress: function (id) {
+			var $this = this;
+			swal({
+				title: "توجه!",
+				text: "آیا از تغییر دادن وضعیت تیکت مطمئن هستید؟",
+				icon: "warning",
+				dangerMode: false,
+				buttons: { confirm: 'بله', cancel: 'انصراف' },
+				className: 'align'
+			}).then((isConfirmed) => {
+				if (isConfirmed) {
+					$this.loading = true;
+					axios.panelUrl.post(`/v1/Tickets/Ticket/SetAsInProgress/${id}`).then(function (result) {
+						$this.getTickets();
+						$this.loading = false;
+						swal({
+							title: "عملیات موفق",
+							text: "تیکت بسته شد"
+						});
+					}
+					).catch(function (result) {
+						$this.loading = false;
+						swal({
+							title: "عملیات	ناموفق",
+							text: "مشکلی در عملیات پیش آمده"
+						});
+					});
+				}
+			});
+		},
         deleteAttachments: function () {
             var $this = this;
             swal({

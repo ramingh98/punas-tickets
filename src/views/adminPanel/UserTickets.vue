@@ -15,7 +15,7 @@
                     <div>
                         <span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار پاسخ</span>
                         <span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">
-                            پاسخ داده شده
+                        پاسخ داده شد
                         </span> <span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
                     </div>
                     <div>

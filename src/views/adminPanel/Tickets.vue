@@ -1,12 +1,22 @@
 <template>
 	<loader v-if="loading" />
-	<div class="col-4 mb-3 mt-4" style="margin-right: 12px;">
-		<div class="row">
-			<label>جستجو بر اساس شناسه:</label>
+	<div class="row">
+		<div class="form-group col-4">
+			<label>فیلتر بر اساس شناسه: </label>
 			<input @keyup="filterById" v-model="ticketId" type="number" class="form-control" />
 		</div>
+		<div class="form-group col-4">
+			<label>فیلتر بر اساس وضعیت: </label>
+			<select @change="filterByStatus" class="form-select" v-model="statusId">
+				<option selected value="">همه</option>
+				<option value="1">پاسخ داده شد</option>
+				<option value="2">درحال بررسی</option>
+				<option value="3">در انتظار پاسخ</option>
+				<option value="4">بسته شد</option>
+			</select>
+		</div>
 	</div>
-	<div class="row">
+	<div class="row mt-4">
 		<div class="col-md-4 col-lg-3 mb-3 text-center" v-for="item in tickets" :key="item.id">
 			<div class="card">
 				<h4 class="card-header">ارسال کننده: {{ item.CustomerFullName }}</h4>
@@ -16,10 +26,13 @@
 					<p>تاریخ ثبت: {{ item.RegDateTime }}</p>
 					<p>تاریخ آخرین گفت و گو: {{ item.ModeDateTime }}</p>
 					<div>
-						<span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار پاسخ</span>
-						<span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">
-							پاسخ داده شده
-						</span> <span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
+						<p :class="{
+							'badge bg-label-success': item.Status === 'پاسخ داده شد',
+							'badge bg-label-info': item.Status === 'در انتظار پاسخ' || item.Status === 'درحال بررسی',
+							'badge bg-label-danger': item.Status === 'بسته شد'
+						}">
+							{{ item.Status }}
+						</p>
 					</div>
 					<div>
 						<p>شناسه : {{ item.TicketId }}</p>
@@ -37,8 +50,12 @@
 							:style="{ 'margin-right': '5px' }" type="button"
 							class="btn rounded-pill btn-danger waves-effect waves-light m-2">بستن</button>
 					</div>
+					
 				</div>
 			</div>
+		</div>
+		<div v-if="tickets.length == 0" class="alert alert-primary text-center" role="alert">
+			موردی یافت نشد
 		</div>
 	</div>
 	<div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -117,6 +134,7 @@ export default {
 			tickets: [],
 			loading: false,
 			ticketId: null,
+			statusId: '',
 			fileInput: [],
 			urls: [],
 			users: [],
@@ -132,8 +150,36 @@ export default {
 			var $this = this;
 			$this.loading = true;
 			$this.tickets = [];
-			axios.panelUrl.get(`/v1/Tickets/Ticket/Read/${$this.ticketId}`).then(function (result) {
-				console.log(result);
+			axios.panelUrl.get("/v1/Tickets/Ticket/Read", {
+				params: {
+					id: $this.ticketId,
+					statusId: null
+				}
+			}).then(function (result) {
+				if (result.data.IsSuccess) {
+					$this.tickets = result.data.Value;
+					$this.loading = false;
+				}
+				else {
+					toast.error('خطای سرور', { position: 'top' })
+					$this.loading = false;
+				}
+			}).catch(function (result) {
+				$this.loading = false;
+				toast.error(result.message)
+			})
+		},
+		filterByStatus: function () {
+			var $this = this;
+			$this.loading = true;
+			$this.tickets = [];
+			console.log($this.statusId);
+			axios.panelUrl.get("/v1/Tickets/Ticket/Read", {
+				params: {
+					id: null,
+					statusId: $this.statusId
+				}
+			}).then(function (result) {
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
 					$this.loading = false;
@@ -167,7 +213,6 @@ export default {
 			var $this = this;
 			$this.loading = true;
 			axios.panelUrl.get('/v1/Tickets/Ticket/Read').then(function (result) {
-				console.log(result);
 				if (result.data.IsSuccess) {
 					$this.tickets = result.data.Value;
 					$this.loading = false;
