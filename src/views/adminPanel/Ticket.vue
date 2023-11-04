@@ -245,11 +245,11 @@ export default {
 				if (isConfirmed) {
 					$this.loading = true;
 					axios.panelUrl.post(`/v1/Tickets/Ticket/SetAsInProgress/${id}`).then(function (result) {
-						$this.getTickets();
+						$this.getMessages();
 						$this.loading = false;
 						swal({
 							title: "عملیات موفق",
-							text: "تیکت بسته شد"
+							text: "وضعیت تیکت تغییر داده شد"
 						});
 					}
 					).catch(function (result) {
