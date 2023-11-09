@@ -13,11 +13,14 @@
                     <p>تاریخ ثبت: {{ item.RegDateTime }}</p>
                     <p>تاریخ آخرین گفت و گو: {{ item.ModeDateTime }}</p>
                     <div>
-                        <span v-if="item.Status == 'در انتظار پاسخ'" class="badge bg-label-info">در انتظار پاسخ</span>
-                        <span v-if="item.Status == 'پاسخ داده شده'" class="badge bg-label-success">
-                        پاسخ داده شد
-                        </span> <span v-if="item.Status == 'بسته شده'" class="badge bg-label-danger">بسته شده</span>
-                    </div>
+						<p :class="{
+							'badge bg-label-success': item.Status === 'پاسخ داده شد',
+							'badge bg-label-info': item.Status === 'در انتظار پاسخ' || item.Status === 'درحال بررسی',
+							'badge bg-label-danger': item.Status === 'بسته شد'
+						}">
+							{{ item.Status }}
+						</p>
+					</div>
                     <div>
                         <p>شناسه : {{ item.TicketId }}</p>
                     </div>

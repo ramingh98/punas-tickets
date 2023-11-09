@@ -24,8 +24,9 @@
                                 بسته شد
                             </span>
                             <button v-if="status == 'در انتظار پاسخ'" @click="SetAsInProgress(id)"
-							:style="{ 'margin-right': '5px' }" type="button"
-							class="btn rounded-pill btn-danger waves-effect waves-light m-2">تنظیم به عنوان در حال بررسی است</button>
+                                :style="{ 'margin-right': '5px' }" type="button"
+                                class="btn rounded-pill btn-danger waves-effect waves-light m-2">تنظیم به عنوان در حال بررسی
+                                است</button>
                         </div>
                     </div>
                 </div>
@@ -86,18 +87,21 @@
                             <div id="editor">
                             </div>
                         </div>
-                        <div class="message-actions d-flex align-items-center">
-                            <label for="attach-doc" class="form-label mb-0">
-                                <i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
-                                <input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
-                                    @change="handleFileChange" />
-                            </label>
-                            <button id="BtnSend" class="btn btn-primary send-msg-btn" style="margin-left: 15px">
-                                <i class="ti ti-send me-md-1 me-0"></i>
-                                <span class="align-middle d-md-inline-block d-none">ارسال</span>
-                            </button>
+                        <div class="row">
+                            <div class="message-actions d-flex align-items-center">
+                                <label for="attach-doc" class="form-label mb-0">
+                                    <i class="ti ti-photo ti-sm cursor-pointer mx-3"></i>
+                                    <input ref="fileInput" type="file" id="attach-doc" hidden multiple="multiple"
+                                        @change="handleFileChange" />
+                                </label>
+                                <button id="BtnSend" class="btn btn-primary send-msg-btn" style="margin-left: 15px">
+                                    <i class="ti ti-send me-md-1 me-0"></i>
+                                    <span class="align-middle d-md-inline-block d-none">ارسال</span>
+                                </button>
+                                
+                            </div>
                             <button type="button" v-if="urls.length > 0" @click="deleteAttachments"
-                                class="btn btn-danger send-msg-btn">
+                                class="btn btn-danger send-msg-btn col-1">
                                 <i class="ti ti-x me-md-1 me-0"></i>
                                 <span class="align-middle d-md-inline-block d-none" style="font-size: 13px">حذف پیوست
                                     ها</span>
@@ -233,35 +237,35 @@ export default {
             });
         },
         SetAsInProgress: function (id) {
-			var $this = this;
-			swal({
-				title: "توجه!",
-				text: "آیا از تغییر دادن وضعیت تیکت مطمئن هستید؟",
-				icon: "warning",
-				dangerMode: false,
-				buttons: { confirm: 'بله', cancel: 'انصراف' },
-				className: 'align'
-			}).then((isConfirmed) => {
-				if (isConfirmed) {
-					$this.loading = true;
-					axios.panelUrl.post(`/v1/Tickets/Ticket/SetAsInProgress/${id}`).then(function (result) {
-						$this.getMessages();
-						$this.loading = false;
-						swal({
-							title: "عملیات موفق",
-							text: "وضعیت تیکت تغییر داده شد"
-						});
-					}
-					).catch(function (result) {
-						$this.loading = false;
-						swal({
-							title: "عملیات	ناموفق",
-							text: "مشکلی در عملیات پیش آمده"
-						});
-					});
-				}
-			});
-		},
+            var $this = this;
+            swal({
+                title: "توجه!",
+                text: "آیا از تغییر دادن وضعیت تیکت مطمئن هستید؟",
+                icon: "warning",
+                dangerMode: false,
+                buttons: { confirm: 'بله', cancel: 'انصراف' },
+                className: 'align'
+            }).then((isConfirmed) => {
+                if (isConfirmed) {
+                    $this.loading = true;
+                    axios.panelUrl.post(`/v1/Tickets/Ticket/SetAsInProgress/${id}`).then(function (result) {
+                        $this.getMessages();
+                        $this.loading = false;
+                        swal({
+                            title: "عملیات موفق",
+                            text: "وضعیت تیکت تغییر داده شد"
+                        });
+                    }
+                    ).catch(function (result) {
+                        $this.loading = false;
+                        swal({
+                            title: "عملیات	ناموفق",
+                            text: "مشکلی در عملیات پیش آمده"
+                        });
+                    });
+                }
+            });
+        },
         deleteAttachments: function () {
             var $this = this;
             swal({
