@@ -3,6 +3,9 @@
         <!-- Chat History -->
         <div id="scrollTarget" class="col app-chat-history bg-body">
             <div class="chat-history-wrapper">
+                <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
+                    class="btn rounded-pill btn-success waves-effect waves-light m-2">ارجاع به پشتیانی
+                    مربوطه</button>
                 <div class="chat-history-header border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex overflow-hidden align-items-center" style="margin-right: 15px">
@@ -98,7 +101,7 @@
                                     <i class="ti ti-send me-md-1 me-0"></i>
                                     <span class="align-middle d-md-inline-block d-none">ارسال</span>
                                 </button>
-                                
+
                             </div>
                             <button type="button" v-if="urls.length > 0" @click="deleteAttachments"
                                 class="btn btn-danger send-msg-btn col-1">
@@ -109,6 +112,48 @@
                         </div>
                     </Form>
                     <p style="font-size: 20px">پسوند تصاویر ارسالی باید JPG و PNG باشد</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">ارجاع تیکت به پشتیبانی مربوطه</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <Form @submit="ReferredTo()">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">کاربر</label>
+                                    <select class="form-control" v-model="userId">
+                                        <option v-for="item in users" v-bind:value="item.Value">{{ item.Text }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">متن پیام</label>
+                                    <Field :validate-on-input="true" v-model="referredMessage" as="textarea"
+                                        name="referredMessage" :rules="validateReferredMessage" class="form-control" />
+                                    <ErrorMessage name="referredMessage" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                                بستن
+                            </button>
+                            <button type="submit" class="btn btn-primary">ارسال</button>
+                            <button type="button" v-if="urls.length > 0" @click="deleteAttachments"
+                                class="btn btn-danger send-msg-btn">
+                                <i class="ti ti-x me-md-1 me-0"></i>
+                                <span class="align-middle d-md-inline-block d-none" style="font-size: 13px;">حذف پیوست
+                                    ها</span>
+                            </button>
+                        </div>
+                    </Form>
                 </div>
             </div>
         </div>
@@ -135,6 +180,9 @@ export default {
             read: "",
             fileInput: [],
             urls: [],
+            users: [],
+            referredMessage: "",
+            userId: null,
             loading: false,
             editor: ClassicEditor,
             editorData: ''
@@ -189,6 +237,41 @@ export default {
                     position: "top",
                 });
             }, 1000);
+        },
+        ReferredTo: function () {
+            var $this = this;
+            $this.loading = true;
+            axios.panelUrl.get(`/v1/Tickets/Ticket/ReferredTo`, {
+                "TicketId": $this.id,
+                "UserId": $this.userId,
+                "ReferredMessage": $this.referredMessage
+            }).then(function (result) {
+                console.log(result);
+                $this.loading = false;
+            }).catch(function (result) {
+                toast.error("خطای سرور", {
+                    // override the global option
+                    position: "top",
+                });
+                $this.loading = false;
+            });
+        },
+        getUsers: function () {
+            var $this = this;
+            $this.loading = true;
+            $this.users = [];
+            axios.panelUrl.get(`/v1/Identities/User/ReadForComboBox`).then(function (result) {
+                $this.loading = false;
+                $this.users = result.data.Value;
+                $this.userId = result.data.Value[0].Value;
+                console.log(result.data.Value);
+            }).catch(function (result) {
+                toast.error("خطای سرور", {
+                    // override the global option
+                    position: "top",
+                });
+                $this.loading = false;
+            });
         },
         getMessages: function () {
             this.id = this.$route.params.id;
@@ -295,6 +378,12 @@ export default {
             }
             return true;
         },
+        validateReferredMessage: function (message) {
+            if (message == null || message == "" || message.trim() == false) {
+                return "متن پیام الزامیست";
+            }
+            return true;
+        }
     },
 };
 </script>
