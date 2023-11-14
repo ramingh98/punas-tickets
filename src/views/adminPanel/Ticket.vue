@@ -3,9 +3,7 @@
         <!-- Chat History -->
         <div id="scrollTarget" class="col app-chat-history bg-body">
             <div class="chat-history-wrapper">
-                <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
-                    class="btn rounded-pill btn-success waves-effect waves-light m-2">ارجاع به پشتیانی
-                    مربوطه</button>
+
                 <div class="chat-history-header border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex overflow-hidden align-items-center" style="margin-right: 15px">
@@ -113,6 +111,16 @@
                     </Form>
                     <p style="font-size: 20px">پسوند تصاویر ارسالی باید JPG و PNG باشد</p>
                 </div>
+                <div v-if="referredUserName == 'Null'">
+                    <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
+                        class="btn rounded-pill btn-success waves-effect waves-light m-2">ارجاع به پشتیانی
+                        مربوطه</button>
+                </div>
+                <div v-if="referredUserName != 'Null'">
+                   ارجاع داده شده به {{ referredUserName }}
+                    <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
+                        class="btn rounded-pill btn-info waves-effect waves-light m-2">ویرایش</button>
+                </div>
             </div>
         </div>
         <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -182,6 +190,7 @@ export default {
             urls: [],
             users: [],
             referredMessage: "",
+            referredUserName: "",
             userId: null,
             loading: false,
             editor: ClassicEditor,
@@ -241,13 +250,14 @@ export default {
         ReferredTo: function () {
             var $this = this;
             $this.loading = true;
-            axios.panelUrl.get(`/v1/Tickets/Ticket/ReferredTo`, {
+            axios.panelUrl.post(`/v1/Tickets/Ticket/ReferredTo`, {
                 "TicketId": $this.id,
                 "UserId": $this.userId,
                 "ReferredMessage": $this.referredMessage
             }).then(function (result) {
-                console.log(result);
-                $this.loading = false;
+                $this.getMessages();
+                toast.success('پیام به پشتیبانی مربوطه ارجاع گردید');
+                $('#basicModal').modal('hide');
             }).catch(function (result) {
                 toast.error("خطای سرور", {
                     // override the global option
@@ -278,8 +288,11 @@ export default {
             var $this = this;
             $this.loading = true;
             axios.panelUrl.get(`/v1/Tickets/Ticket/Find/${this.id}`).then(function (result) {
+                console.log(result.data.Value);
                 $this.ticket = result.data.Value.CustomerTickets;
                 $this.title = result.data.Value.Title;
+                $this.referredMessage = result.data.Value.ReferredMessage;
+                $this.referredUserName = result.data.Value.ReferredUserName;
                 $this.status = result.data.Value.Status;
                 $this.read = result.data.Value.Read;
                 $this.loading = false;
