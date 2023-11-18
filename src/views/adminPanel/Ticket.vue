@@ -3,7 +3,6 @@
         <!-- Chat History -->
         <div id="scrollTarget" class="col app-chat-history bg-body">
             <div class="chat-history-wrapper">
-
                 <div class="chat-history-header border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex overflow-hidden align-items-center" style="margin-right: 15px">
@@ -28,6 +27,10 @@
                                 :style="{ 'margin-right': '5px' }" type="button"
                                 class="btn rounded-pill btn-danger waves-effect waves-light m-2">تنظیم به عنوان در حال بررسی
                                 است</button>
+                            <div v-if="userName == referredUserName">
+                                <button data-bs-toggle="modal" data-bs-target="#referredMessage" type="button"
+                                    class="btn rounded-pill btn-success waves-effect waves-light m-2">توضیحات ارجاع</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,13 +115,16 @@
                     <p style="font-size: 20px">پسوند تصاویر ارسالی باید JPG و PNG باشد</p>
                 </div>
                 <div v-if="referredUserName == 'Null'">
-                    <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
-                        class="btn rounded-pill btn-success waves-effect waves-light m-2">ارجاع به پشتیانی
-                        مربوطه</button>
+                    <div v-if="userName == 'نوید ارفعی'">
+                        <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
+                            class="btn rounded-pill btn-success waves-effect waves-light m-2">ارجاع به پشتیانی
+                            مربوطه</button>
+                    </div>
                 </div>
                 <div v-if="referredUserName != 'Null'">
-                   ارجاع داده شده به {{ referredUserName }}
-                    <button @click="getUsers" data-bs-toggle="modal" data-bs-target="#basicModal" type="button"
+                    ارجاع داده شده به {{ referredUserName }}
+                    <button v-if="userName == 'نوید ارفعی'" @click="getUsers" data-bs-toggle="modal"
+                        data-bs-target="#basicModal" type="button"
                         class="btn rounded-pill btn-info waves-effect waves-light m-2">ویرایش</button>
                 </div>
             </div>
@@ -165,6 +171,21 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="referredMessage" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">ارجاع تیکت به پشتیبانی مربوطه</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            {{ referredMessage }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -194,14 +215,15 @@ export default {
             userId: null,
             loading: false,
             editor: ClassicEditor,
-            editorData: ''
+            editorData: '',
+            adminId: null,
         };
     },
     components: {
         Form, Field, ErrorMessage, loader,
     },
     mounted() {
-        console.log(this.status);
+        console.log();
         this.getMessages();
         ClassicEditor.create(document.querySelector('#editor'), {
             language: {
@@ -223,6 +245,16 @@ export default {
                 ]
             }
         }).then(editor => { window.editor = editor; }).catch(err => { console.error(err.stack); });
+        this.getId()
+    },
+    computed: {
+        userName() {
+            return this.$store.state.adminName;
+        },
+    },
+    created() {
+        // در اینجا می‌توانید از اکشنی که نام کاربر را از API دریافت می‌کند فراخوانی کنید
+        this.$store.dispatch('getAdminName');
     },
     methods: {
         scrollTop() {
@@ -266,6 +298,19 @@ export default {
                 $this.loading = false;
             });
         },
+        getId: function () {
+            var $this = this;
+
+            axios.panelUrl.get(`/v1/Identities/User/GetId`).then(function (result) {
+                $this.adminId = result.data.Value;
+            }).catch(function (result) {
+                toast.error("خطای سرور", {
+                    // override the global option
+                    position: "top",
+                });
+                $this.loading = false;
+            });
+        },
         getUsers: function () {
             var $this = this;
             $this.loading = true;
@@ -274,7 +319,6 @@ export default {
                 $this.loading = false;
                 $this.users = result.data.Value;
                 $this.userId = result.data.Value[0].Value;
-                console.log(result.data.Value);
             }).catch(function (result) {
                 toast.error("خطای سرور", {
                     // override the global option
@@ -288,7 +332,7 @@ export default {
             var $this = this;
             $this.loading = true;
             axios.panelUrl.get(`/v1/Tickets/Ticket/Find/${this.id}`).then(function (result) {
-                console.log(result.data.Value);
+                console.log(result.data);
                 $this.ticket = result.data.Value.CustomerTickets;
                 $this.title = result.data.Value.Title;
                 $this.referredMessage = result.data.Value.ReferredMessage;

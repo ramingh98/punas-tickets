@@ -4,7 +4,7 @@ import axios from "../utils/axios";
 export default createStore({
 	state: {
 		userName: null,
-		adminName: null
+		adminName: null,
 	},
 	getters: {
 	},
@@ -14,7 +14,7 @@ export default createStore({
 		},
 		setAdminName(state, adminName) {
 			state.adminName = adminName;
-		},
+		}
 	},
 	actions: {
 		getUserName: function (context) {
@@ -30,7 +30,7 @@ export default createStore({
 			}).catch(function (result) {
 				console.log(result);
 			})
-		}
+		},
 	},
 	modules: {
 	}
